@@ -1,5 +1,4 @@
 import { IconType } from "react-icons";
-import TooltipComp from "../ui/TooltipComp";
 const CategoryInput = ({
   onClick,
   label,

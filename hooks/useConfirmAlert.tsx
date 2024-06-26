@@ -39,9 +39,9 @@ export const useConfirmAlert = (): [
   const AlertDialogComp = () => {
     return (
       <AlertDialog open={promise !== null}>
-        <AlertDialogTrigger asChild>
+        {/* <AlertDialogTrigger asChild>
           <Button variant="outline">Show Dialog</Button>
-        </AlertDialogTrigger>
+        </AlertDialogTrigger> */}
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>

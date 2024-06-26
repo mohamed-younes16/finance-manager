@@ -29,8 +29,9 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Trash2 } from "lucide-react";
+import { RefreshCcw, Trash2 } from "lucide-react";
 import useConfirmAlert from "@/hooks/useConfirmAlert";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -38,6 +39,7 @@ interface DataTableProps<TData, TValue> {
   searchKey: string;
   OnDelete: (rows: Row<TData>[]) => void;
   disabled?: boolean;
+  queryKey?: any[];
 }
 
 export function DataTable<TData, TValue>({
@@ -45,12 +47,16 @@ export function DataTable<TData, TValue>({
   data,
   searchKey,
   OnDelete,
+  queryKey,
   disabled = false,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  let queryClient;
+
+  if (!!queryKey) queryClient = useQueryClient();
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
@@ -88,27 +94,41 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-        {selectedRows.length > 0 && (
-          <>
+        <div className="flexcenter gap-2">
+          {selectedRows.length > 0 && (
+            <>
+              <Button
+                onClick={async () => {
+                  const isConfirmed = await init();
+                  isConfirmed &&
+                    (() => {
+                      OnDelete(selectedRows);
+                      table.resetRowSelection();
+                    })();
+                }}
+                disabled={disabled}
+                className=" flexcenter hover:text-red-500 gap-1"
+                variant={"outline"}
+              >
+                <Trash2 />
+                <p>Delete</p>
+                <p>{`(${selectedRows.length})`}</p>
+              </Button>
+            </>
+          )}
+          {!!queryKey && (
             <Button
-              onClick={async () => {
-                const isConfirmed = await init();
-                isConfirmed &&
-                  (() => {
-                    OnDelete(selectedRows);
-                    table.resetRowSelection();
-                  })();
-              }}
-              disabled={disabled}
-              className=" flexcenter hover:text-red-500 gap-1"
-              variant={"outline"}
+              size="icon"
+   
+              className="bg-main"
+              onClick={() =>
+                queryClient.invalidateQueries({ queryKey: ["transactions"] })
+              }
             >
-              <Trash2 />
-              <p>Delete</p>
-              <p>{`(${selectedRows.length})`}</p>
+              <RefreshCcw />
             </Button>
-          </>
-        )}
+          )}
+        </div>
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="mb-6">

@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/popover";
 import Image from "next/image";
 
-import RegisterModal from "./forms/RegisterModal";
+
 import MenuItem from "./navbar/MenuItem";
 import { Album, LucideLogOut, Menu, UserIcon } from "lucide-react";
 import { Separator } from "./ui/separator";

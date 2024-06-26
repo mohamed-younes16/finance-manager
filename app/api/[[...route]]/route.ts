@@ -5,6 +5,7 @@ import profile from "./profile";
 import { getSession } from "@/actions";
 import accounts from "./accounts";
 import categories from "./categories";
+import transactions from "./transactions";
 
 
 const checkAuth = async (c, next) => {
@@ -12,7 +13,7 @@ const checkAuth = async (c, next) => {
 
   if (!session) {
     return c.json(
-      { message: "Unauthorized you piece of shit" },
+      { message: "Unauthorized " },
       { status: 401 }
     );
   }
@@ -26,7 +27,8 @@ const routes = app
   .route("/register", register)
   .route("/profile", profile)
   .route("/accounts", accounts)
-  .route("/categories", categories);
+  .route("/categories", categories)
+  .route("/transactions",transactions)
 
 export const GET = handle(app);
 export const POST = handle(app);

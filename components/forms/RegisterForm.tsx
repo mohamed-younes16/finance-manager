@@ -87,7 +87,6 @@ const RegisterForm = ({ type }: { type: "login" | "register" }) => {
             }, 500);
           })
           .catch((e) => {
-  
             toast.error("Error Happend");
           });
       } else if (type === "login") {
@@ -99,7 +98,6 @@ const RegisterForm = ({ type }: { type: "login" | "register" }) => {
             } else toast.error("error happend , try again .");
           })
           .catch((e) => {
-
             toast.error(e.response.data.message || "Error Happend", {
               invert: true,
             });

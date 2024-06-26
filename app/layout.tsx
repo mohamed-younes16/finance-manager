@@ -23,7 +23,7 @@ export default async function RootLayout({
 
   return (
     <html suppressHydrationWarning className={`${inter.className}`} lang="en">
-      <body className=" bg-neutral-200  dark:bg-neutral-800">
+      <body className=" bg-neutral-200 overflow-x-hidden max-lg:pb-[120px]  dark:bg-neutral-800">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -33,7 +33,7 @@ export default async function RootLayout({
           <QueryProvider>
             <UserLoader userData={user} />
             <Toaster richColors position="top-center" />
-            <NavBar userData={user} />
+            {user && <NavBar userData={user} />}
             {children}
           </QueryProvider>
         </ThemeProvider>

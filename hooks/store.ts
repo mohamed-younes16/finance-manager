@@ -13,15 +13,10 @@ type Store = {
   setIsSheetOpen: (v: boolean) => void;
   user: UserFetched | null;
   setUser: (v: any) => void;
-  /////////////////////////////////////////////
   isFormSheetOpen: boolean;
   setIsFormSheetOpen: (v: boolean) => void;
   choosenId: string | undefined;
   setchoosenId: (v: string | undefined) => void;
-  // isCategorySheetOpen: boolean;
-  // setIsCategorySheetOpen: (v: boolean) => void;
-  // choosenCategory: string | undefined;
-  // setchoosenCategory: (v: string | undefined) => void;
 };
 
 export const useStore = create<Store>()(
@@ -31,14 +26,6 @@ export const useStore = create<Store>()(
       setchoosenId: (v) => set(() => ({ choosenId: v, isFormSheetOpen: !!v })),
       isFormSheetOpen: false,
       setIsFormSheetOpen: (v: boolean) => set(() => ({ isFormSheetOpen: v })),
-
-      // choosenCategory: undefined,
-      // setchoosenCategory: (v) =>
-      //   set(() => ({ choosenAcc: v, isCategorieSheetOpen: !!v })),
-      // isCategorySheetOpen: false,
-      // setIsCategorySheetOpen: (v: boolean) =>
-      //   set(() => ({ isCategorySheetOpen: v })),
-
       isSheetOpen: false,
       setIsSheetOpen: (v: boolean) => set(() => ({ isSheetOpen: v })),
 

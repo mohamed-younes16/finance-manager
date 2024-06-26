@@ -1,7 +1,4 @@
-
-
 import * as z from "zod";
-
 
 export const RegisterSchema = z
   .object({
@@ -23,6 +20,18 @@ export const RegisterSchema = z
     message: "Passwords don't match",
     path: ["confirm"],
   });
+
+export const transactionSchema = z.object({
+  amount: z.number({ required_error: "Amount must be a Provided" }),
+  payee: z.string({ required_error: "Payee is required" }).min(1),
+  notes: z.string().default(""),
+  accountId: z
+    .string({ required_error: "Account reference is required" })
+    .min(1),
+  categoryId: z.string().nullable().default(""),
+  category: z.string().nullable().default(""),
+  createdAt: z.string().nullable().default(""),
+});
 export const Loginschema = z.object({
   email: z.string().min(4).email(),
   password: z
