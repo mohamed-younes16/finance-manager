@@ -45,6 +45,7 @@ const page = () => {
       <Separator className="my-6" />
       {!!categories ? (
         <DataTable
+        queryKey={["categories"]}
           OnDelete={(Ids) => mutate({ Ids: Ids.map((e) => e.original.id) })}
           disabled={isDisabeled}
           searchKey="name"

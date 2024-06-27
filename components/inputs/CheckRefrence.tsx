@@ -34,7 +34,12 @@ const CheckRefrence = ({
     <div>
       <DropdownMenu onOpenChange={setOpen} open={open}>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" className=" w-full px-0 flex pl-3">
+          <Button
+            variant="outline"
+            className={` w-full max-w-sm ${
+              !!choosen && !!Refrence && "bg-main"
+            } px-0 flex pl-3`}
+          >
             <div className=" flex-1 text-start ">
               {!!choosen && !!Refrence ? choosen : `Choose your ${type}`}
             </div>

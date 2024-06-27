@@ -1,3 +1,4 @@
+import { format, parse, subDays } from "date-fns";
 
 export function toMilliunits(amount) {
   return amount * 1000;
@@ -12,6 +13,20 @@ export const formatedPrice = (price: number) =>
     style: "currency",
     currency: "USD",
   }).format(price);
+export const formatedPercentage = (
+  price: number,
+  options: {
+    addPrefix?: boolean;
+  } = {
+    addPrefix: false,
+  }
+) => {
+  const res = new Intl.NumberFormat("en-US", {
+    style: "percent",
+    currency: "USD",
+  }).format(price / 100);
+  return options.addPrefix && price > 0 ? `+${res}` : res;
+};
 
 export function formatDateString(dateString: string) {
   const options: Intl.DateTimeFormatOptions = {
@@ -30,30 +45,19 @@ export function formatDateString(dateString: string) {
 
   return `${time} - ${formattedDate}`;
 }
+export const calculatePercentage = (prev: number, curr: number) => {
+  if (prev == 0) return prev === curr ? 0 : 100;
+  return ((curr - prev) / prev) * 100;
+};
+type Period = {
+  from: Date | string | undefined;
+  to: Date | string | undefined;
+};
+export const formatDateRange = ({ from, to }: Period) => {
+  const defTo = new Date();
+  const defFrom = subDays(new Date(), 30);
 
-// export function formatDate(inputDateString: string): string {
-//   const inputDate = new Date(inputDateString);
-//   const today = new Date();
-
-//   if (
-//     inputDate.getDate() === today.getDate() &&
-//     inputDate.getMonth() === today.getMonth() &&
-//     inputDate.getFullYear() === today.getFullYear()
-//   ) {
-//     // If the date is today, show only hours and minutes
-//     const options: Intl.DateTimeFormatOptions = {
-//       hour: "2-digit",
-//       minute: "2-digit",
-//     };
-//     return new Intl.DateTimeFormat("en-US", options).format(inputDate);
-//   } else {
-//     // If the date is not today, show the full date
-//     const options: Intl.DateTimeFormatOptions = {
-//       month: "short",
-//       day: "numeric",
-//       hour: "2-digit",
-//       minute: "2-digit",
-//     };
-//     return new Intl.DateTimeFormat("en-US", options).format(inputDate);
-//   }
-// }
+  const start = from ? from : defFrom;
+  const end = to ? to : defTo;
+  return `${format(start, "LLL dd , y")} - ${format(end, "LLL dd , y")}`;
+};

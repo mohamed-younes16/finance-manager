@@ -15,6 +15,8 @@ import { useGetAccounts } from "@/hooks/accounts-hooks";
 import { client } from "@/lib/hono";
 import { InferRequestType } from "hono";
 import { toast } from "sonner";
+import { toMilliunits } from "@/utils";
+import { Separator } from "../ui/separator";
 
 interface Transaction {
   payee: string | undefined;
@@ -40,20 +42,18 @@ type FullUnorderedData = {
 };
 type props = {
   data: string[][];
-  onCancel: () => void;
-  onSubmit: (v: boolean) => void;
-};
 
+  onSubmit: () => void;
+};
 const requiredOpts = ["payee", "amount", "createdAt"];
-const Availableopts = ["payee", "amount", "createdAt", "category"];
 interface SelectedColumnsState {
   [key: number]: string | null;
 }
-const ImportCard = ({ data, onCancel, onSubmit }: props) => {
+const ImportCard = ({ data, onSubmit }: props) => {
   const headers = data[0];
   const body = data.slice(1);
   const { isPending, mutate: addHandler, isSuccess } = useAddTransaction();
-  const { isLoading, data: accounts } = useGetAccounts();
+  const { data: accounts } = useGetAccounts();
   const [selectedColumns, setSelectedColumns] = useState<SelectedColumnsState>(
     {}
   );
@@ -76,7 +76,7 @@ const ImportCard = ({ data, onCancel, onSubmit }: props) => {
     while (i < minimumEligible) {
       orderedTransactions.push({
         categoryId: "",
-        amount: parseInt(data.amount[i]),
+        amount: toMilliunits(parseInt(data.amount[i])),
         category: (data.category && data?.category[i]) || "",
         payee: data.payee[i],
         createdAt: data.createdAt[i],
@@ -85,8 +85,11 @@ const ImportCard = ({ data, onCancel, onSubmit }: props) => {
       i++;
     }
     accountId && addHandler(orderedTransactions);
-    isSuccess && onSubmit(isSuccess)
   };
+
+  useEffect(() => {
+    isSuccess && onSubmit();
+  }, [isSuccess]);
 
   const getData = () => {
     if (!accountId) toast.error("no account choosen");
@@ -117,6 +120,7 @@ const ImportCard = ({ data, onCancel, onSubmit }: props) => {
           {" "}
           Import Transaction Page
         </CardTitle>
+
         <div>
           <div className=" space-y-3">
             <Button
@@ -124,7 +128,7 @@ const ImportCard = ({ data, onCancel, onSubmit }: props) => {
                 !notReady ? getData() : null;
               }}
               size="sm"
-              disabled={selectedNumber < requiredOpts.length}
+              disabled={selectedNumber < requiredOpts.length || isPending}
               className=" bg-minor text-foreground max-lg:text-sm text-lg"
             >
               {notReady
@@ -143,7 +147,8 @@ const ImportCard = ({ data, onCancel, onSubmit }: props) => {
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className=" space-y-6">
+        <Separator className="bg-muted-foreground/60" />
         <p className=" font-semibold text-lg">Account</p>
 
         {accounts && (
@@ -154,6 +159,7 @@ const ImportCard = ({ data, onCancel, onSubmit }: props) => {
             Refrence={accountId}
           />
         )}
+        <Separator className="bg-muted-foreground/60" />
         {!!data ? (
           <ImportTable
             selectedColumns={selectedColumns!}
@@ -171,9 +177,6 @@ const ImportCard = ({ data, onCancel, onSubmit }: props) => {
           />
         ) : null}
       </CardContent>
-      <CardFooter>
-        <Button onClick={onCancel}>Cancel</Button>
-      </CardFooter>
     </Card>
   );
 };

@@ -45,7 +45,6 @@ const ProfileForm = ({ userData }: { userData: UserFetched | null }) => {
   });
   const [isSubmitting, setIsSub] = useState(false);
   useEffect(() => {
-    console.log(form.getValues())
     setIsSub(form.formState.isSubmitting);
 
   }, [form.formState]);

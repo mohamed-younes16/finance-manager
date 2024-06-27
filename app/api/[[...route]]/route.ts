@@ -6,16 +6,13 @@ import { getSession } from "@/actions";
 import accounts from "./accounts";
 import categories from "./categories";
 import transactions from "./transactions";
-
+import summary from "./summary";
 
 const checkAuth = async (c, next) => {
   const session = await getSession();
 
   if (!session) {
-    return c.json(
-      { message: "Unauthorized " },
-      { status: 401 }
-    );
+    return c.json({ message: "Unauthorized " }, { status: 401 });
   }
   await next();
 };
@@ -28,8 +25,8 @@ const routes = app
   .route("/profile", profile)
   .route("/accounts", accounts)
   .route("/categories", categories)
-  .route("/transactions",transactions)
-
+  .route("/transactions", transactions)
+  .route("/summary", summary);
 export const GET = handle(app);
 export const POST = handle(app);
 

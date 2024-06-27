@@ -9,7 +9,6 @@ export const useUser = () => {
       const res = await client.api.profile.$get();
       if (!res.ok) throw new Error("Failed to Fetch User");
       const { user } = await res.json();
-      console.log(user);
       return user;
     },
   });

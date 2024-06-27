@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 
 enum VARIANTS {
   LIST = "LIST",
-  import = "IMPORT",
+  IMPORT = "IMPORT",
 }
 const INITIAL_IMPORT_RESULTS = {
   data: [],
@@ -33,12 +33,12 @@ const INITIAL_IMPORT_RESULTS = {
 const page = () => {
   const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
   const [importRes, setImportRes] = useState(INITIAL_IMPORT_RESULTS);
-  const cancelImport = () => {
+  const endImport = () => {
     setVariant(VARIANTS.LIST);
     setImportRes(INITIAL_IMPORT_RESULTS);
   };
   const onUpload = (res: typeof INITIAL_IMPORT_RESULTS) => {
-    setVariant(VARIANTS.import);
+    setVariant(VARIANTS.IMPORT);
     setImportRes(res);
   };
   const { data: transactions, isLoading } = useGetTransactions();
@@ -60,18 +60,16 @@ const page = () => {
 
   return (
     <div className="bg-background min-h-screen rounded-md py-4  w-full px-8 ">
-      {variant === VARIANTS.import ? (
-        <div className=" space-y-6">
-          <UploadButton onUpload={onUpload} />
-          {/* <h1 className="text-xl font-bold">Import Transaction Page</h1> */}
-          <ImportCard
-            data={importRes.data}
-            onSubmit={(isSuccess) => {
-              console.log(isSuccess);
-              isSuccess && cancelImport();
-            }}
-            onCancel={cancelImport}
-          />
+      {variant === VARIANTS.IMPORT ? (
+        <div className="space-y-6 ">
+          <div className="flex items-center gap-x-4">
+            <UploadButton onUpload={onUpload} />
+            <Button size={"sm"} onClick={endImport}>
+              Cancel
+            </Button>
+          </div>
+
+          <ImportCard data={importRes.data} onSubmit={endImport} />
         </div>
       ) : (
         <>

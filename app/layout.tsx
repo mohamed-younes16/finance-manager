@@ -23,7 +23,10 @@ export default async function RootLayout({
 
   return (
     <html suppressHydrationWarning className={`${inter.className}`} lang="en">
-      <body className=" bg-neutral-200 overflow-x-hidden max-lg:pb-[120px]  dark:bg-neutral-800">
+      <body
+        className=" bg-background
+       overflow-x-hidden max-lg:pb-[120px]  "
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

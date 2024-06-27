@@ -71,6 +71,7 @@ export const usePatchTransaction = () => {
       toast.success(result.message);
       queryClient.invalidateQueries({ queryKey: ["transaction", { id }] });
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["summary"] });
     },
     onError: (err) => {
       toast.error(err.message);
@@ -103,6 +104,7 @@ export const useAddTransaction = () => {
     onSuccess: (result) => {
       toast.success(result.message);
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["summary"] });
     },
     onError: (err) => {
       toast.error(err.message);
@@ -136,6 +138,7 @@ export const useDeleteTransaction = () => {
     onSuccess: (result) => {
       toast.success(result.message);
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["summary"] });
     },
     onError: (err) => {
       toast.error(err.message);

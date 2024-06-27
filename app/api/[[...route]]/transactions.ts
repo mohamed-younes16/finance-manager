@@ -5,6 +5,23 @@ import getCurrentUser from "@/actions";
 import * as z from "zod";
 import { parse, subDays } from "date-fns";
 import { transactionSchema } from "@/models/Schemas/Setup";
+type CategoryRef = {
+  categoryRef?: {
+    connect?: { id: string; ownerId: string };
+    create?: { name: string; ownerId: string };
+  };
+};
+type TransactionData = {
+  accountRef: { connect: { id: string; ownerId: string } };
+  amount: number;
+  payee: string;
+  notes: string;
+  categoryRef?: {
+    connect?: { id: string; ownerId: string };
+    create?: { name: string; ownerId: string };
+  };
+  createdAt?: string;
+};
 
 const transactions = new Hono()
   .get(
@@ -20,8 +37,13 @@ const transactions = new Hono()
     async (c) => {
       try {
         const user = await getCurrentUser();
+        if (!user) {
+          return c.json({ message: "Unauthorized" }, 401);
+        }
         const { from, to, accountId } = c.req.valid("query");
-
+        const accountRef = !!accountId
+        ? { ownerId: user.id, id: accountId }
+        : { ownerId: user.id };
         const defTo = new Date();
         const defFrom = subDays(new Date(), 30);
         const start = from ? parse(from, "yyyy-MM-dd", new Date()) : defFrom;
@@ -29,7 +51,7 @@ const transactions = new Hono()
 
         const transactions = await prismadb.transaction.findMany({
           where: {
-            accountRef: { ownerId: user?.id },
+            accountRef,
             createdAt: {
               gte: start,
               lte: end,
@@ -57,6 +79,7 @@ const transactions = new Hono()
             notes: true,
             payee: true,
           },
+          
         });
 
         return c.json({ transactions }, 200);
@@ -173,13 +196,38 @@ const transactions = new Hono()
     if (!values) {
       return c.json({ message: "Missing required fields" }, { status: 400 });
     }
+
     try {
       const user = await getCurrentUser();
       if (!user) {
         return c.json({ message: "Unauthorized" }, 401);
       }
 
-      const filterderData = values.map((el) => {
+      // Fetch all existing categories for the user
+      const existingCategories = await prismadb.category.findMany({
+        where: { ownerId: user.id },
+      });
+
+      // Create a map of existing categories for quick lookup
+      const categoryMap = new Map(
+        existingCategories.map((cat) => [cat.name, cat.id])
+      );
+
+      // Process categories creation or connection
+      for (const el of values) {
+        const { category } = el;
+
+        if (category && !categoryMap.has(category)) {
+          // Create the category if it doesn't exist
+          const newCategory = await prismadb.category.create({
+            data: { name: category, ownerId: user.id },
+          });
+          categoryMap.set(category, newCategory.id);
+        }
+      }
+
+      // Process transaction data using categoryMap
+      const filteredData = values.map((el) => {
         const {
           accountId,
           amount,
@@ -189,51 +237,52 @@ const transactions = new Hono()
           category,
           createdAt,
         } = el;
-        const categoryRef = categoryId
-          ? {
-              categoryRef: { connect: { id: categoryId, ownerId: user.id } },
-            }
-          : category
-          ? {
-              categoryRef: { create: { name: category, ownerId: user.id } },
-            }
-          : {};
+        let categoryRef: CategoryRef = {};
 
-        let obj: any = {
-          accountRef: { connect: { id: accountId, ownerId: user.id } },
-          amount,
-          payee,
-          notes,
-          ...categoryRef,
-        };
-
-        if (!!createdAt) {
-          obj = { ...obj, createdAt };
+        if (categoryId) {
+          categoryRef = {
+            categoryRef: { connect: { id: categoryId, ownerId: user.id } },
+          };
+        } else if (category) {
+          // Use the category from categoryMap
+          categoryRef = {
+            categoryRef: {
+              connect: { id: categoryMap.get(category)!, ownerId: user.id },
+            },
+          };
         }
-        return {
+
+        let obj: TransactionData = {
           accountRef: { connect: { id: accountId, ownerId: user.id } },
           amount,
           payee,
           notes,
           ...categoryRef,
         };
+
+        if (createdAt) {
+          obj.createdAt = createdAt;
+        }
+
+        return obj;
       });
-      filterderData.forEach(async (e) => {
+      for (const e of filteredData) {
         await prismadb.transaction.create({
           data: e,
+          include: { categoryRef: true },
         });
-      });
+      }
 
       return c.json(
-        { message: "your new finance transaction is ready" },
-        { status: 200 }
+        { message: "Your new finance transactions are ready" },
+        200
       );
     } catch (error) {
       console.log(
         error,
         "##########finance transaction create ###############"
       );
-      return c.json({ message: "error in server" }, 500);
+      return c.json({ message: "Error in server" }, 500);
     }
   })
   .post(
