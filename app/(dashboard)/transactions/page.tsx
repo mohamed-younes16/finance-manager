@@ -1,7 +1,7 @@
 "use client";
 import Heading from "@/components/Heading";
 import { DataTable } from "@/components/ui/data-table";
-import { RefreshCcw, Users2Icon } from "lucide-react";
+import {  Users2Icon } from "lucide-react";
 import React, { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { TransactionResponseGetType, columns } from "./components/columns";
@@ -17,7 +17,6 @@ import TableSkeleton from "@/components/TableSkeleton";
 import { formatMilliunits } from "@/utils";
 import UploadButton from "@/components/inputs/UploadButton";
 import ImportCard from "@/components/forms/ImportCard";
-import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 
 enum VARIANTS {
