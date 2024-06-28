@@ -11,7 +11,11 @@ const LoginButton = ({
   onClick: () => void;
 }) => {
   return (
-    <Button onClick={onClick} className=" hover:opacity-80 active:scale-95 transition-all w-full flexcenter py-6 ">
+    <Button
+      size={"sm"}
+      onClick={onClick}
+      className=" hover:opacity-80 active:scale-95 bg-background text-foreground transition-all w-full flexcenter py-6 "
+    >
       {icon}
       <p className="flex-1 ">{label}</p>
     </Button>

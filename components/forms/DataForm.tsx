@@ -125,7 +125,7 @@ const DataForm = ({
             disabled={isPending}
             className={`${
               isPending && "opacity-50"
-            } bg-main flexcenter w-full gap-2`}
+            } bg-minor flexcenter w-full gap-2`}
           >
             {id ? "Update" : "Submit"}
             {isPending && (

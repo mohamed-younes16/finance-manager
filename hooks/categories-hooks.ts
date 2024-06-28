@@ -63,6 +63,8 @@ export const usePatchCategory = () => {
     onSuccess: (result) => {
       toast.success(result.message);
       queryClient.invalidateQueries({ queryKey: ["categories"] });
+      queryClient.invalidateQueries({ queryKey: ["transactions",] });
+
     },
     onError: (err) => {
       toast.error(err.message);
@@ -94,6 +96,8 @@ export const useAddCategory = () => {
     onSuccess: (result) => {
       toast.success(result.message);
       queryClient.invalidateQueries({ queryKey: ["categories"] });
+      queryClient.invalidateQueries({ queryKey: ["transactions",] });
+
     },
     onError: (err) => {
       toast.error(err.message);
@@ -126,6 +130,7 @@ export const useDeleteCategory = () => {
     onSuccess: (result) => {
       toast.success(result.message);
       queryClient.invalidateQueries({ queryKey: ["categories"] });
+      queryClient.invalidateQueries({ queryKey: ["transactions",] });
     },
     onError: (err) => {
       toast.error(err.message);

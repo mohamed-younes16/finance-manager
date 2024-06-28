@@ -120,7 +120,7 @@ const RegisterForm = ({ type }: { type: "login" | "register" }) => {
           >
             <div
               style={{ width: `${cleared}%` }}
-              className={`absolute bg-main h-full transition-all top-0 left-0 ${
+              className={`absolute  h-full transition-all top-0 left-0 ${
                 cleared == 100
                   ? "!bg-green-500"
                   : cleared >= 50
@@ -216,7 +216,7 @@ const RegisterForm = ({ type }: { type: "login" | "register" }) => {
                   form.formState.isSubmitting
                     ? " animate-bounce bg-zinc-500"
                     : ""
-                } flexcenter w-full bg-main hover:bg-main/80 gap-6`}
+                } flexcenter w-full bg-minor hover:bg-opacity-80 gap-6`}
               >
                 {form.formState.isSubmitting ? (
                   <Loader2 className="h-6 w-6 animate-spin " />
@@ -234,7 +234,7 @@ const RegisterForm = ({ type }: { type: "login" | "register" }) => {
           }
         </form>
       </Form>
-      <div className="space-y-6 mt-10">
+      <div className="space-y-6 max-lg:space-y-4 max-lg:mt-6 mt-10">
         <LoginButton
           onClick={async () => {
             signIn("google");

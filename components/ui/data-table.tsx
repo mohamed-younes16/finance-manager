@@ -54,9 +54,8 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  let queryClient;
 
-  if (!!queryKey) queryClient = useQueryClient();
+  const queryClient = useQueryClient();
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
@@ -119,11 +118,8 @@ export function DataTable<TData, TValue>({
           {!!queryKey && (
             <Button
               size="icon"
-   
               className="bg-main"
-              onClick={() =>
-                queryClient.invalidateQueries({ queryKey: ["transactions"] })
-              }
+              onClick={() => queryClient.invalidateQueries({ queryKey })}
             >
               <RefreshCcw />
             </Button>

@@ -1,7 +1,7 @@
 "use client";
 import Heading from "@/components/Heading";
 import { DataTable } from "@/components/ui/data-table";
-import {  Users2Icon } from "lucide-react";
+import { Users2Icon } from "lucide-react";
 import React, { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { TransactionResponseGetType, columns } from "./components/columns";
@@ -58,7 +58,7 @@ const page = () => {
   }
 
   return (
-    <div className="bg-background min-h-screen rounded-md py-4  w-full px-8 ">
+    <div className="bg-background min-h-screen rounded-md py-4  w-full px-8 max-lg:px-4 ">
       {variant === VARIANTS.IMPORT ? (
         <div className="space-y-6 ">
           <div className="flex items-center gap-x-4">
@@ -72,7 +72,7 @@ const page = () => {
         </div>
       ) : (
         <>
-          <div className="flex items-center max-lg:justify-center max-lg:gap-6 flex-wrap justify-between">
+          <div className="flex mb-4 items-center max-lg:justify-center max-lg:gap-6 flex-wrap justify-between">
             <h1 className="text-xl font-bold">Transactions Page</h1>
             <CliComp>
               {" "}

@@ -27,7 +27,7 @@ const page = () => {
   }
 
   return (
-    <div className="bg-background min-h-screen rounded-md py-4  w-full px-8 ">
+    <div className="bg-background min-h-screen rounded-md py-4  w-full px-8 max-lg:px-4 ">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold">Accounts Page</h1>
         <CliComp>
@@ -44,6 +44,7 @@ const page = () => {
       <Separator className="my-6" />
       {!!accounts ? (
         <DataTable
+          queryKey={["accounts"]}
           OnDelete={(Ids) => mutate({ Ids: Ids.map((e) => e.original.id) })}
           disabled={isDisabeled}
           searchKey="name"

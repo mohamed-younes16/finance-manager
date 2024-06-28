@@ -22,9 +22,9 @@ const Heading = ({
             {icon}
           </div>
         </div>
-        <h2 className=" text-3xl max-lg:text-lg font-bold">{title} </h2>
+        <h2 className=" text-3xl max-lg:text-lg capitalize font-bold">{title} </h2>
       </div>
-      <p className="text-muted-foreground max-lg:text-sm text-xl">
+      <p className="text-foreground ml-3 capitalize  max-lg:text-sm text-xl">
         {description}{" "}
       </p>
     </div>

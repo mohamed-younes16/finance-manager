@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { MonitorCheck } from "lucide-react";
 
 export function ModeToggle({ children }: { children?: React.ReactNode }) {
   const { setTheme } = useTheme();
@@ -23,13 +24,26 @@ export function ModeToggle({ children }: { children?: React.ReactNode }) {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="z-50">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
+        <DropdownMenuItem
+          className=" flex items-center gap-2"
+          onClick={() => setTheme("light")}
+        >
+          <SunIcon className="h-[1.2rem] w-[1.2rem]" />
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
+        <DropdownMenuItem
+          className=" flex items-center gap-2"
+          onClick={() => setTheme("dark")}
+        >
+          {" "}
+          <MoonIcon className="h-[1.2rem] w-[1.2rem]" />
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
+        <DropdownMenuItem
+          className=" flex items-center gap-2"
+          onClick={() => setTheme("system")}
+        >
+          <MonitorCheck className="h-[1.2rem] w-[1.2rem]" />
           System
         </DropdownMenuItem>
       </DropdownMenuContent>

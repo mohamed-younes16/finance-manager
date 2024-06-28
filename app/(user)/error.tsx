@@ -10,9 +10,9 @@ const Error = ({ err }: { err: any }) => {
   return (
     <div
       className="
-bg-white dark:bg-[url(/assets/dark-bg.svg)]
+bg-background
 
-z-50 bg-cover
+z-50 
 
 w-screen h-screen fixed inset-0 flex flex-col gap-4 justify-center items-center"
     >

@@ -37,7 +37,7 @@ const CheckRefrence = ({
           <Button
             variant="outline"
             className={` w-full max-w-sm ${
-              !!choosen && !!Refrence && "bg-main"
+              !!choosen && !!Refrence && "bg-minor"
             } px-0 flex pl-3`}
           >
             <div className=" flex-1 text-start ">
@@ -49,7 +49,7 @@ const CheckRefrence = ({
             >
               <ArrowBigDownDash
                 className={`${
-                  open && "rotate-180 text-main"
+                  open && "rotate-180 text-minor"
                 } transition-all h-6 w-6 `}
               />
             </Button>

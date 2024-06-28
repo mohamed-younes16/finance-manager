@@ -22,10 +22,9 @@ const AuthComponent = () => {
   return (
     <div className="w-full overflow-hidden">
       <CliComp>
-        <div className=" space-y-6 max-w-2xl mx-auto  w-full">
+        <div className=" space-y-6 max-lg:space-y-4 max-w-2xl mx-auto  w-full">
           <Heading
-            icon={<User />}
-            
+            icon={<User className="text-foreground" />}
             title={`${open}`}
             description={`${open} to the application`}
           />
@@ -51,10 +50,10 @@ const AuthComponent = () => {
           >
             <RegisterForm type="register" />
           </motion.div>
-          <div className="flex gap-2">
-            <p>New to Store create an account!</p>
+          <div className="flexcenter text-lg flex-wrap  font-medium gap-2">
+            <p>New to Store   {open == "register" ? "find your account" : "create an account"}!</p>
             <div
-              className="text-main cursor-pointer "
+              className="text-minor  font-bold cursor-pointer "
               onClick={() => setOpen(open == "login" ? "register" : "login")}
             >
               {open == "login" ? "register" : "login"}
