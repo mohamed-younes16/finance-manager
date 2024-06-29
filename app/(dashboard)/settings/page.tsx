@@ -1,16 +1,16 @@
-import getCurrentUser from "@/actions";
-import Heading from "@/components/Heading";
-import SubscribeModal from "@/components/SubscribeModal";
-import { Separator } from "@/components/ui/separator";
-import { getUserSubscriptionPlan } from "@/lib/subscription";
-import CliComp from "@/providers/modalProvider";
-import { CheckCircle, Settings } from "lucide-react";
+// import getCurrentUser from "@/actions";
+// import Heading from "@/components/Heading";
+// import SubscribeModal from "@/components/SubscribeModal";
+// import { Separator } from "@/components/ui/separator";
+// import { getUserSubscriptionPlan } from "@/lib/subscription";
+// import CliComp from "@/providers/modalProvider";
+// import { CheckCircle, Settings } from "lucide-react";
 
-const page = async () => {
-  const { isPro } = await getUserSubscriptionPlan();
+const page =  () => {
+  // const { isPro } = await getUserSubscriptionPlan();
   return (
     <div className="bg-background min-h-[40dvh] rounded-md py-4  w-full px-8 max-lg:px-4 ">
-      <div className="flex items-center justify-between">
+      {/* <div className="flex items-center justify-between">
         <Heading
           icon={<Settings className="text-foreground h-10 w-10" />}
           title={`Your settings Options `}
@@ -37,7 +37,7 @@ const page = async () => {
             )}
           </div>
         </CliComp>
-      </div>
+      </div> */}
     </div>
   );
 };
