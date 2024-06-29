@@ -7,7 +7,6 @@ import getCurrentUser from "@/actions";
 import { UserLoader } from "@/hooks/store";
 import { QueryProvider } from "@/providers/query";
 import { Inter } from "next/font/google";
-import dynamic from "next/dynamic";
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -15,7 +14,7 @@ export const inter = Inter({
 });
 
 export const apiLink = process.env.NEXT_PUBLIC_API_URL;
-async function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: ReactNode;
@@ -46,4 +45,3 @@ async function RootLayout({
     </html>
   );
 }
-export default dynamic(() => Promise.resolve(RootLayout), { ssr: false })

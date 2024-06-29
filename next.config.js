@@ -5,7 +5,9 @@ const nextConfig = {
     domains: ["swiperjs.com", "utfs.io", "s3.amazonaws.com", "*"],
   },
   typescript: { ignoreBuildErrors: true },
-
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
 };
 
 module.exports = nextConfig;
