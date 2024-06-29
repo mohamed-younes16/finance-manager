@@ -23,7 +23,7 @@ const pathVariants = {
   },
 };
 
-const AnimatedLogo = ({ className }: { className: string }) => {
+const AnimatedLogo = ({ className }: { className?: string }) => {
   return (
     <motion.svg
       className={cn(

@@ -8,22 +8,26 @@ datasource db {
 }
 
 model User {
-  id              String           @id @unique @default(cuid())
-  name            String?
-  email           String?          @unique
-  emailVerified   DateTime?
-  image           String?
-  username        String?
-  imageUrl        String?
-  bio             String?
-  onboarded       Boolean          @default(false)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  hashedpassword  String?
-  accounts        Account[]
-  sessions        Session[]
-  financeAccounts FinanceAccount[]
-  categories      Category[]
+  id               String           @id @unique @default(cuid())
+  name             String?
+  email            String?          @unique
+  emailVerified    DateTime?
+  image            String?
+  username         String?
+  imageUrl         String?
+  bio              String?
+  onboarded        Boolean          @default(false)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  hashedpassword   String?
+  accounts         Account[]
+  sessions         Session[]
+  financeAccounts  FinanceAccount[]
+  categories       Category[]
+  subscriptionId   String?
+  customerId       String?
+  variantId        Int?
+  currentPeriodEnd DateTime?
 
   @@unique([name])
   @@index([id])

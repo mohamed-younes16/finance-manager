@@ -40,18 +40,13 @@ const Page = async () => {
   const CurrentUserData = await getCurrentUser();
 
   return (
-    <>
-      {CurrentUserData ? (
-        <div
-          className="fixed inset-0   flexcenter left-0 top-0  text-black  
-    dark:text-white
-    min-h-screen transition-all 
-    bg-cover"
-        >
+  
+      <div>
+        {CurrentUserData ? (
           <div className=" w-[80dvw]  p-4 rounded-2xl  mt-6 border-neutral-600 border backdrop-blur-md ">
             <div className="flex items-center  gap-6">
               <div className=" flexcenter  gap-4 ">
-                <TooltipComp   hoverText="Log-out">
+                <TooltipComp hoverText="Log-out">
                   <SignOutButton>
                     <LucideLogOut className="h-10 w-10 " />
                   </SignOutButton>
@@ -77,10 +72,10 @@ const Page = async () => {
               </CliComp>{" "}
             </div>
           </div>
-        </div>
-      ) : // <UserLoginAlert/>
-      null}
-    </>
+        ) : // <UserLoginAlert/>
+        null}{" "}
+      </div>
+
   );
 };
 

@@ -11,6 +11,9 @@ import FormSheet from "@/components/sheets/FormSheet";
 import { useDeleteAccount, useGetAccounts } from "@/hooks/accounts-hooks";
 
 import TableSkeleton from "@/components/TableSkeleton";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useGetPurchase } from "@/hooks/purchase-hooks";
 
 const page = () => {
   const { data: accounts, isLoading } = useGetAccounts();
@@ -25,6 +28,8 @@ const page = () => {
       name: e.name,
     }));
   }
+
+  const { data: pay } = useGetPurchase();
 
   return (
     <div className="bg-background min-h-screen rounded-md py-4  w-full px-8 max-lg:px-4 ">

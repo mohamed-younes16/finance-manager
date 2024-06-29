@@ -38,12 +38,12 @@ const transactions = new Hono()
       try {
         const user = await getCurrentUser();
         if (!user) {
-          return c.json({ message: "Unauthorized" }, 401);
+          return c.json({ message: "Unauthorized _______________" }, 401);
         }
         const { from, to, accountId } = c.req.valid("query");
         const accountRef = !!accountId
-        ? { ownerId: user.id, id: accountId }
-        : { ownerId: user.id };
+          ? { ownerId: user.id, id: accountId }
+          : { ownerId: user.id };
         const defTo = new Date();
         const defFrom = subDays(new Date(), 30);
         const start = from ? parse(from, "yyyy-MM-dd", new Date()) : defFrom;
@@ -79,7 +79,6 @@ const transactions = new Hono()
             notes: true,
             payee: true,
           },
-          
         });
 
         return c.json({ transactions }, 200);
@@ -158,7 +157,7 @@ const transactions = new Hono()
           return c.json({ message: "Missing required fields" }, 401);
         }
         if (!user) {
-          return c.json({ message: "Unauthorized" }, 401);
+          return c.json({ message: "Unauthorized _______________" }, 401);
         }
 
         const categoryRef = categoryId
@@ -200,7 +199,7 @@ const transactions = new Hono()
     try {
       const user = await getCurrentUser();
       if (!user) {
-        return c.json({ message: "Unauthorized" }, 401);
+        return c.json({ message: "Unauthorized _______________" }, 401);
       }
 
       // Fetch all existing categories for the user

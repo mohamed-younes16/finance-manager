@@ -7,6 +7,8 @@ import accounts from "./accounts";
 import categories from "./categories";
 import transactions from "./transactions";
 import summary from "./summary";
+import purchase from "./purchase";
+import webhook from "./webhook";
 
 const checkAuth = async (c, next) => {
   const session = await getSession();
@@ -18,7 +20,6 @@ const checkAuth = async (c, next) => {
 };
 
 const app = new Hono().basePath("/api");
-app.use("*", checkAuth);
 
 const routes = app
   .route("/register", register)
@@ -26,7 +27,9 @@ const routes = app
   .route("/accounts", accounts)
   .route("/categories", categories)
   .route("/transactions", transactions)
-  .route("/summary", summary);
+  .route("/summary", summary)
+  .route("/purchase", purchase)
+  .route("/webhook", webhook);
 export const GET = handle(app);
 export const POST = handle(app);
 
