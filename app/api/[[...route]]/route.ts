@@ -10,7 +10,7 @@ import summary from "./summary";
 import purchase from "./purchase";
 import webhook from "./webhook";
 
-const checkAuth = async (c, next) => {
+export const checkAuth = async (c, next) => {
   const session = await getSession();
 
   if (!session) {
@@ -20,6 +20,14 @@ const checkAuth = async (c, next) => {
 };
 
 const app = new Hono().basePath("/api");
+
+app.use("/register/*", checkAuth);
+app.use("/profile/*", checkAuth);
+app.use("/accounts/*", checkAuth);
+app.use("/categories/*", checkAuth);
+app.use("/transactions/*", checkAuth);
+app.use("/summary/*", checkAuth);
+app.use("/purchase/*", checkAuth);
 
 const routes = app
   .route("/register", register)

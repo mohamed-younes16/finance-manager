@@ -1,5 +1,3 @@
-import "@uploadthing/react/styles.css";
-
 import { HomeIcon, LucideLogOut } from "lucide-react";
 import Link from "next/link";
 import {
@@ -16,25 +14,6 @@ import SignOutButton from "@/components/inputs/SignOutButton";
 import getCurrentUser from "@/actions";
 import CliComp from "@/providers/modalProvider";
 
-
-export const Heading = ({
-  title = "",
-  description = "",
-}: {
-  title: string;
-  description: string;
-}) => {
-  return (
-    <div className="w-full">
-      <h2 className=" text-3xl max-md:text-2xl max-sm:text-xl font-bold">
-        {title}{" "}
-      </h2>
-      <p className="text-muted-foreground max-md:text-base text-lg">
-        {description}{" "}
-      </p>
-    </div>
-  );
-};
 
 const Page = async () => {
   const CurrentUserData = await getCurrentUser();

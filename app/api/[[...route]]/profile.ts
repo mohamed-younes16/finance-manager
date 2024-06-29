@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { Context, Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import prismadb from "@/lib/prismabd";
 import getCurrentUser from "@/actions";

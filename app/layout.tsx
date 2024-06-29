@@ -13,7 +13,7 @@ export const inter = Inter({
   display: "swap",
 });
 
-export const apiLink = process.env.NEXT_PUBLIC_API_URL;
+
 export default async function RootLayout({
   children,
 }: {

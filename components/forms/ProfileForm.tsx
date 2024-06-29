@@ -38,7 +38,7 @@ const ProfileForm = ({ userData }: { userData: UserFetched | null }) => {
     resolver: zodResolver(ProfileSchema),
     defaultValues: {
       bio: userData?.bio || "",
-      imageUrl: userData?.imageUrl || "https://utfs.io/f/82b4ebba-4053-4e3f-b41f-9628375da003-1mj2q1.jpg",
+      imageUrl: userData?.imageUrl || "",
       name: userData?.name || "",
       username: userData?.username || "",
     },
