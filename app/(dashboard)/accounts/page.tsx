@@ -9,10 +9,7 @@ import { AccountResponseGetType, columns } from "./components/columns";
 import CliComp from "@/providers/modalProvider";
 import FormSheet from "@/components/sheets/FormSheet";
 import { useDeleteAccount, useGetAccounts } from "@/hooks/accounts-hooks";
-
 import TableSkeleton from "@/components/TableSkeleton";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { useGetPurchase } from "@/hooks/purchase-hooks";
 
 const page = () => {

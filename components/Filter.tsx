@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
-import { Separator } from "./ui/separator";
 import {
   Select,
   SelectContent,

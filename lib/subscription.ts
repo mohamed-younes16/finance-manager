@@ -1,9 +1,11 @@
+import getCurrentUser from "@/actions";
 import { lemonClient } from "./lemons";
 import prismadb from "./prismabd";
 
-export async function getUserSubscriptionPlan(userId: string) {
-  const user = await prismadb.user.findUnique({
-    where: { id: userId },
+export async function getUserSubscriptionPlan() {
+  const userData = await getCurrentUser();
+  const user = await prismadb.user.findFirst({
+    where: { id: userData?.id },
     select: {
       subscriptionId: true,
       currentPeriodEnd: true,
@@ -20,14 +22,15 @@ export async function getUserSubscriptionPlan(userId: string) {
     user.currentPeriodEnd.getTime() + 86_400_000 > Date.now()
   );
 
-  const subscription = await lemonClient.retrieveSubscription({
-    id: user.subscriptionId || "",
-  });
+  const subscription = user.subscriptionId
+    ? await lemonClient.retrieveSubscription({
+        id: user.subscriptionId,
+      })
+    : null;
 
-  // If user has a pro plan, check cancel status on lemonsqueezy.
   let isCanceled = false;
 
-  if (isPro && user.subscriptionId) {
+  if (isPro && user.subscriptionId && !!subscription && !!subscription.data) {
     isCanceled = subscription.data.attributes.cancelled;
   }
 
@@ -36,7 +39,8 @@ export async function getUserSubscriptionPlan(userId: string) {
     currentPeriodEnd: user.currentPeriodEnd?.toISOString(),
     isCanceled,
     isPro,
-    updatePaymentMethodURL:
-      subscription.data.attributes.urls.update_payment_method,
+    updatePaymentMethodURL: subscription
+      ? subscription.data.attributes.urls.update_payment_method
+      : null,
   };
 }

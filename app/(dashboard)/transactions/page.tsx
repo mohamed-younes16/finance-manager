@@ -18,6 +18,7 @@ import { formatMilliunits } from "@/utils";
 import UploadButton from "@/components/inputs/UploadButton";
 import ImportCard from "@/components/forms/ImportCard";
 import { Button } from "@/components/ui/button";
+import { useGetPlan } from "@/hooks/purchase-hooks";
 
 enum VARIANTS {
   LIST = "LIST",
@@ -32,6 +33,7 @@ const INITIAL_IMPORT_RESULTS = {
 const page = () => {
   const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
   const [importRes, setImportRes] = useState(INITIAL_IMPORT_RESULTS);
+
   const endImport = () => {
     setVariant(VARIANTS.LIST);
     setImportRes(INITIAL_IMPORT_RESULTS);
@@ -43,7 +45,7 @@ const page = () => {
   const { data: transactions, isLoading } = useGetTransactions();
   const { mutate, isPending } = useDeleteTransaction();
   const isDisabeled = isLoading || isPending;
-
+  const { data: plan } = useGetPlan();
   let formattedTransactions: TransactionResponseGetType[] = [];
   if (transactions) {
     formattedTransactions = transactions.map((e) => ({
@@ -76,7 +78,7 @@ const page = () => {
             <h1 className="text-xl font-bold">Transactions Page</h1>
             <CliComp>
               {" "}
-              <UploadButton onUpload={onUpload} />
+              {!!plan && plan.isPro && <UploadButton onUpload={onUpload} />}
               <FormSheet type="transaction" />
             </CliComp>
           </div>

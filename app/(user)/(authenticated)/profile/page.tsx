@@ -15,7 +15,7 @@ import TooltipComp from "@/components/ui/TooltipComp";
 import SignOutButton from "@/components/inputs/SignOutButton";
 import getCurrentUser from "@/actions";
 import CliComp from "@/providers/modalProvider";
-import UserLoginAlert from "@/components/UserLoginAlert";
+
 
 export const Heading = ({
   title = "",

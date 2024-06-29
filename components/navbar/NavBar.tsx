@@ -7,6 +7,7 @@ import UserHandler from "../UserHandler";
 import MainNav from "../sheets/MainNav";
 import { Button } from "../ui/button";
 import { ModeToggle } from "../ui/themeButton";
+import { Suspense } from "react";
 
 const NavBar = ({ userData }: { userData: UserFetched | null }) => {
   const matches = useMediaQuery("(min-width:1024px)") || false;
@@ -45,13 +46,15 @@ const NavBar = ({ userData }: { userData: UserFetched | null }) => {
             className="flex items-center justify-end gap-3
              max-md:w-full max-md:max-w-sm mx-3 lg:min-w-[150px]"
           >
-            {matches ? (
-              <div className="md:min-w-[90px] max-md:w-full ">
-                <UserHandler userData={userData} />
-              </div>
-            ) : (
-              <MainNav />
-            )}
+            <Suspense>
+              {matches ? (
+                <div className="md:min-w-[90px] max-md:w-full ">
+                  <UserHandler userData={userData} />
+                </div>
+              ) : (
+                <MainNav />
+              )}
+            </Suspense>
 
             <Button className="max-lg:hidden">
               <ModeToggle />

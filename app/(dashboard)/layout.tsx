@@ -1,8 +1,8 @@
-import { ReactNode } from "react";
-import Footer from "@/components/Footer";
+import { ReactNode, Suspense } from "react";
+
 import CliComp from "@/providers/modalProvider";
 import Welcome from "@/components/Welcome";
-import CheckRefrence from "@/components/inputs/CheckRefrence";
+
 import Filter from "@/components/Filter";
 
 export default async function RootLayout({
@@ -19,11 +19,16 @@ export default async function RootLayout({
       >
         <CliComp>
           <Welcome />
+          <Suspense fallback={<div>Loading filter</div>}>
+            {" "}
+            <Filter />
+          </Suspense>
         </CliComp>{" "}
-        <Filter />
       </div>
 
-      <div className=" px-16 max-lg:px-2  w-full max-lg:-mt-6 -mt-10">{children}</div>
+      <div className=" px-16 max-lg:px-2  w-full max-lg:-mt-6 -mt-10">
+        {children}
+      </div>
     </div>
   );
 }

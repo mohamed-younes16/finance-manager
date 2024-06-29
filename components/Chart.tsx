@@ -12,19 +12,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+const freeVariants = ["area", "bar"] as const; // Free users get area and bar charts
+const proVariants = ["area", "bar", "line"] as const; // Pro users get all chart types
 
-const variants = ["area", "bar", "line"] as const;
-type VariantChartType = (typeof variants)[number];
+type VariantChartType = (typeof freeVariants | typeof proVariants)[number];
+
 const Chart = ({
   data,
+  isPro,
 }: {
   data: {
     date: string;
     income: number;
     expense: number;
   }[];
+  isPro: boolean;
 }) => {
-  const [chartType, setChartType] = useState<VariantChartType>("area");
+  const variants = isPro ? proVariants : freeVariants;
+  const [chartType, setChartType] = useState<VariantChartType>(variants[0]);
+
   return (
     <Card className=" shadow-2xl">
       <CardHeader className="flex flex-row justify-between items-center">

@@ -23,3 +23,18 @@ export const useGetPurchase = () => {
   });
   return query;
 };
+export const useGetPlan = () => {
+  const query = useQuery({
+    queryKey: ["plan"],
+    queryFn: async () => {
+      const res = await client.api.purchase.$get();
+
+      if (!res.ok) throw new Error("Failed to Fetch accounts");
+
+      const { planData } = await res.json();
+
+      return planData;
+    },
+  });
+  return query;
+};

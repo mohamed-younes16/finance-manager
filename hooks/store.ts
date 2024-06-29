@@ -1,8 +1,6 @@
 "use client";
 import getCurrentUser from "@/actions";
-
 import { useEffect } from "react";
-import { boolean } from "zod";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 

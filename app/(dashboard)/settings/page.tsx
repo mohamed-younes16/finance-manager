@@ -2,14 +2,12 @@ import getCurrentUser from "@/actions";
 import Heading from "@/components/Heading";
 import SubscribeModal from "@/components/SubscribeModal";
 import { Separator } from "@/components/ui/separator";
-import { useUser } from "@/hooks/hooks";
 import { getUserSubscriptionPlan } from "@/lib/subscription";
+import CliComp from "@/providers/modalProvider";
 import { CheckCircle, Settings } from "lucide-react";
-import React from "react";
 
 const page = async () => {
-  const user = await getCurrentUser();
-  const { isPro } = await getUserSubscriptionPlan(user?.id || "");
+  const { isPro } = await getUserSubscriptionPlan();
   return (
     <div className="bg-background min-h-[40dvh] rounded-md py-4  w-full px-8 max-lg:px-4 ">
       <div className="flex items-center justify-between">
@@ -26,17 +24,19 @@ const page = async () => {
       >
         <p className=" text-lg font-semibold">Subpscription</p>
         <div>{isPro ? "You are On A Pro Plan" : "No Plan Yet"}</div>
-        <div>
-          {" "}
-          {!isPro ? (
-            <SubscribeModal />
-          ) : (
-            <div className=" flexcenter font-semibold text-minor gap-4">
-              <CheckCircle strokeWidth={3} className="h-8 w-8" />
-              <p>Subscribed</p>
-            </div>
-          )}
-        </div>
+        <CliComp>
+          <div>
+            {" "}
+            {!isPro ? (
+              <SubscribeModal />
+            ) : (
+              <div className=" flexcenter font-semibold text-minor gap-4">
+                <CheckCircle strokeWidth={3} className="h-8 w-8" />
+                <p>Subscribed</p>
+              </div>
+            )}
+          </div>
+        </CliComp>
       </div>
     </div>
   );

@@ -8,20 +8,17 @@ import Image from "next/image";
 
 
 import MenuItem from "./navbar/MenuItem";
-import { Album, LucideLogOut, Menu, UserIcon } from "lucide-react";
+import { LucideLogOut, Menu, UserIcon } from "lucide-react";
 import { Separator } from "./ui/separator";
 import SignOutButton from "./inputs/SignOutButton";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ModeToggle } from "./ui/themeButton";
 import ImageContainer from "./ImageContainer";
-import CliComp from "@/providers/modalProvider";
+
 
 const UserHandler = ({ userData }: { userData: UserFetched | null }) => {
   const searchParams = useSearchParams();
-  const [open, setOpen] = useState<"login" | "register" | null>(
-    searchParams.get("redirected") === "true" ? "login" : null
-  );
   const [popopen, setpopopen] = useState(false);
   useEffect(() => {
     const redirected = searchParams.get("redirected") === "true";

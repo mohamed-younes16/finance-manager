@@ -16,17 +16,24 @@ import PieVariant from "./PieVariant";
 import RadarVariant from "./RadarVariant";
 import RadialVariant from "./RadialVariant";
 
-const variants = ["pie", "radar", "radio"] as const;
-type VariantChartType = (typeof variants)[number];
+const freeVariants = ["pie"] as const; // Free users get area and bar charts
+const proVariants = ["pie", "radar", "radio"] as const; // P
+
+type VariantChartType = (typeof freeVariants | typeof proVariants)[number];
+
 const SpendingCategory = ({
   data,
+  isPro,
 }: {
   data: {
     category: string;
     value: number;
   }[];
+  isPro: boolean;
 }) => {
-  const [chartType, setChartType] = useState<VariantChartType>("pie");
+  const variants = isPro ? proVariants : freeVariants;
+  const [chartType, setChartType] = useState<VariantChartType>(variants[0]);
+
   return (
     <Card className=" shadow-2xl">
       <CardHeader className="flex flex-row justify-between items-center">
