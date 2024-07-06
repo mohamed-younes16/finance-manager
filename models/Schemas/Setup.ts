@@ -40,10 +40,10 @@ export const Loginschema = z.object({
     .max(24),
 });
 export const ProfileSchema = z.object({
-  name: z.string(),
-  username: z.string(),
-  bio: z.string(),
-  imageUrl: z.string(),
+  name: z.string().min(1).default(""),
+  username: z.string().min(1).default(""),
+  bio: z.string().min(1).default(""),
+  imageUrl: z.string().min(1).default(""),
 });
 export const AccountSchema = z.object({
   name: z.string().max(15),

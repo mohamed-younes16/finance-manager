@@ -8,12 +8,12 @@ import { ProfileSchema } from "@/models/Schemas/Setup";
 
 
 const profile = new Hono()
-  .post("/", zValidator("json", ProfileSchema), async (c) => {
+  .post("/patch", zValidator("json", ProfileSchema), async (c) => {
   
     const data = c.req.valid("json");
-    if (!data || !data.name || !data.username || !data.bio || !data.imageUrl) {
+    if (!data) {
       return c.json(
-        { message: "Missing required fields: name, username, bio, imageUrl" },
+        { message: "Missing a required fields: name or username, bio, imageUrl" },
         { status: 400 }
       );
     }
@@ -34,6 +34,7 @@ const profile = new Hono()
   })
   .get("/", async (c) => {
     const user = await getCurrentUser();
+    console.log(user)
     return c.json({ user }, { status: 200 });
   });
 

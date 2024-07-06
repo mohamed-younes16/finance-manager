@@ -24,7 +24,6 @@ export default async function getCurrentUser() {
         onboarded: true,
         bio: true,
         id: true,
-        createdAt: true,
       },
     });
     return user;

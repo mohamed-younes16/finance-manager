@@ -25,7 +25,7 @@ export default async function RootLayout({
     <html suppressHydrationWarning className={`${inter.className}`} lang="en">
       <body
         className="dark:bg-[url(/assets/magicdark1.svg)] 
-         bg-[url(/assets/magicdark2.svg)]
+         bg-[url(/assets/magicdark2.svg)] bg-cover min-h-screen
        overflow-x-hidden  "
       >
         <ThemeProvider

@@ -29,7 +29,7 @@ interface billBoard {
 }
 
 interface UserFetched   {
-  
+
   id: string;
   name: string | null;
   email: string | null;
@@ -37,7 +37,7 @@ interface UserFetched   {
   imageUrl: string | null;
   bio: string | null;
   onboarded: boolean;
-  createdAt: Date;
+
 
 } 
 
