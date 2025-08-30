@@ -33,7 +33,12 @@ const SpendingCategory = ({
 }) => {
   const variants = isPro ? proVariants : freeVariants;
   const [chartType, setChartType] = useState<VariantChartType>(variants[0]);
-
+  const total = data
+    .map((e) => e.value)
+    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+  const da = data.map((e) => {
+    return { ...e, percentage: (e.value / total) * 100 };
+  });
   return (
     <Card className=" shadow-2xl">
       <CardHeader className="flex flex-row justify-between items-center">
@@ -62,11 +67,11 @@ const SpendingCategory = ({
           </div>
         ) : !!data ? (
           chartType == "pie" ? (
-            <PieVariant data={data} />
+            <PieVariant data={da} />
           ) : chartType === "radar" ? (
             <RadarVariant data={data} />
           ) : (
-            <RadialVariant data={data} />
+            <RadialVariant data={da} />
           )
         ) : null}
       </CardContent>

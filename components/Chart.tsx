@@ -12,8 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-const freeVariants = ["area", "bar"] as const; // Free users get area and bar charts
-const proVariants = ["area", "bar", "line"] as const; // Pro users get all chart types
+const freeVariants = ["area", "bar"] as const; 
+const proVariants = ["area", "bar", "line"] as const; 
 
 type VariantChartType = (typeof freeVariants | typeof proVariants)[number];
 
@@ -44,7 +44,7 @@ const Chart = ({
           </SelectTrigger>
           <SelectContent>
             {variants.map((e, i) => (
-              <SelectItem value={variants[i]}>{variants[i]}</SelectItem>
+              <SelectItem key={i} value={variants[i]}>{variants[i]}</SelectItem>
             ))}
           </SelectContent>
         </Select>

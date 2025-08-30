@@ -22,7 +22,7 @@ const AuthComponent = () => {
   return (
     <div className="w-full overflow-hidden">
       <CliComp>
-        <div className=" space-y-6 max-lg:space-y-4 max-w-2xl mx-auto  w-full">
+        <div className=" space-y-6 m max-lg:space-y-4 max-w-md mx-auto  w-full">
           <Heading
             icon={<User className="text-foreground" />}
             title={`${open}`}

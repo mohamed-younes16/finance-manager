@@ -19,7 +19,6 @@ import Image from "next/image";
 import { Separator } from "./ui/separator";
 const SubscribeModal = () => {
   const features = ["Upload CSV files", "Diffrent Chart types"];
-  const router = useRouter();
   const { data, isLoading, isSuccess } = useGetPurchase();
   const Onclick = async () => {
     isSuccess && data && window.open(`${data.checkoutUrl}`, "_blank");
@@ -98,7 +97,7 @@ const SubscribeModal = () => {
             viewport={{ once: true }}
           >
             {" "}
-            <Button onClick={Onclick} className="w-full bg-minor">
+            <Button onClick={Onclick}  className="w-full bg-minor">
               Take me there
             </Button>
           </m.div>

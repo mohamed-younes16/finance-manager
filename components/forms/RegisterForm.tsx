@@ -4,7 +4,6 @@ import { Button } from "../ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { RegisterSchema, Loginschema } from "@/models/Schemas/Setup";
-
 import * as z from "zod";
 import {
   Form,
@@ -47,28 +46,22 @@ const RegisterForm = ({ type }: { type: "login" | "register" }) => {
     mode: "all",
     defaultValues,
   });
-  const filedsNumber = Object.entries(form.getValues()).length;
-  const filedsKeys: any = Object.keys(form.getValues());
+
+  const filedsNumber = Object.keys(form.watch()).length;
   const [cleared, setCleared] = useState(0);
   const {
     formState: { errors },
-    getFieldState,
   } = form;
+
   useEffect(() => {
-    let cleared = filedsNumber;
-    filedsKeys.forEach((e) => {
-      const { invalid, isTouched, error } = getFieldState(e);
-      if (error) return cleared--;
-      if (invalid && isTouched) return cleared--;
-      else if (!invalid && !isTouched) return cleared--;
-    });
+    const dirty = Object.keys(form.formState.dirtyFields).length;
+    const invalid = Object.keys(form.formState.errors).length;
 
-    const count = (cleared / filedsNumber) * 100;
+    const clearedCount = dirty - invalid;
+    const percentage = (clearedCount / filedsNumber) * 100;
 
-    if (count === 0 && !form.formState.isValid) return setCleared(0);
-    else setCleared(count >= 0 ? count : 0);
-  }, [form.formState, form.watch()]);
-
+    setCleared(percentage > 0 ? percentage : 0);
+  }, [form.formState]);
   async function onSubmit(
     values: z.infer<typeof RegisterSchema> | z.infer<typeof Loginschema>
   ) {
@@ -123,8 +116,10 @@ const RegisterForm = ({ type }: { type: "login" | "register" }) => {
               className={`absolute  h-full transition-all top-0 left-0 ${
                 cleared == 100
                   ? "!bg-green-500"
+                  : cleared == 25
+                  ? "!bg-yellow-500"
                   : cleared >= 50
-                  ? "!bg-yellow-400"
+                  ? "!bg-orange-500"
                   : ""
               }`}
             ></div>
@@ -137,7 +132,6 @@ const RegisterForm = ({ type }: { type: "login" | "register" }) => {
                 render={({ field }) => (
                   <FormItem className=" peer flex flex-col   ">
                     <FormLabel>Name</FormLabel>
-
                     <FormControl className="">
                       <Input
                         className={`${errors[field.name] && "border-red-500"}`}
@@ -156,7 +150,6 @@ const RegisterForm = ({ type }: { type: "login" | "register" }) => {
               render={({ field }) => (
                 <FormItem className=" peer flex flex-col   ">
                   <FormLabel>Email</FormLabel>
-
                   <FormControl className="">
                     <Input
                       className={`${errors[field.name] && "border-red-500"}`}

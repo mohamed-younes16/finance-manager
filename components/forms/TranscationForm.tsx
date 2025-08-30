@@ -222,7 +222,7 @@ const TransactionForm = ({
                     data={categories}
                     type="category"
                     setRefrence={(v) => {
-                      console.log(v, "###############");
+
                       setValue("categoryId", v, {
                         shouldDirty: true,
                         shouldTouch: true,

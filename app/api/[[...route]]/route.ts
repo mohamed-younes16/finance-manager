@@ -9,6 +9,7 @@ import transactions from "./transactions";
 import summary from "./summary";
 import purchase from "./purchase";
 import webhook from "./webhook";
+import { OpenAPIHono } from "@hono/zod-openapi";
 
 export const checkAuth = async (c, next) => {
   const session = await getSession();
@@ -19,16 +20,12 @@ export const checkAuth = async (c, next) => {
   await next();
 };
 
-const app = new Hono().basePath("/api");
+const app = new OpenAPIHono().basePath("/api");
 
-app.use("/register/*", checkAuth);
-app.use("/profile/*", checkAuth);
-app.use("/accounts/*", checkAuth);
-app.use("/categories/*", checkAuth);
-app.use("/transactions/*", checkAuth);
-app.use("/summary/*", checkAuth);
-app.use("/purchase/*", checkAuth);
-
+app.use("/*", checkAuth);
+app.notFound((c) => {
+  return c.json({ page: "wrong" });
+});
 const routes = app
   .route("/register", register)
   .route("/profile", profile)

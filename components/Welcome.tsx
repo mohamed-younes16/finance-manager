@@ -8,10 +8,10 @@ const Welcome = () => {
   const { user } = useStore();
 
   return (
-    <div className=" space-y-4">
+    <div className="space-y-4">
       <div
         className="  w-full  whitespace-nowrap
-        duration-500 transition-all   h-full flex items-center    max-lg:text-2xl font-bold text-3xl"
+        duration-500 transition-all   h-full flex items-center  max-lg:text-xl font-bold text-2xl"
       >
         {user?.name ? (
           <>

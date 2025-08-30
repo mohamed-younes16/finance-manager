@@ -7,13 +7,13 @@ export default async function RootLayout({
 }) {
   return (
     <div
-      className="fixed inset-0   flexcenter left-0 top-0  text-black  
+      className=" flex justify-center pt-6  text-black  
           dark:text-white
           min-h-screen transition-all 
           bg-cover"
     >
-      {" "}
-      <div className=" w-[80dvw]  p-4 rounded-2xl mt-6 border-neutral-600 border backdrop-blur-md ">
+    
+      <div className=" w-fit lg:w-[75dvw] max-h-fit max-w-3xl p-4 rounded-2xl  border-neutral-600 border backdrop-blur-md ">
         {children}
       </div>
     </div>

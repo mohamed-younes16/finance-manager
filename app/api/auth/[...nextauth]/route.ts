@@ -6,7 +6,6 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prismadb from "@/lib/prismabd";
 import bcrypt from "bcryptjs";
 
-
 export const authOpts: AuthOptions = {
   adapter: PrismaAdapter(prismadb),
   providers: [
@@ -61,6 +60,7 @@ export const authOpts: AuthOptions = {
   session: {
     strategy: "jwt",
   },
+ 
 };
 export const handler = NextAuth(authOpts);
 export { handler as GET, handler as POST };

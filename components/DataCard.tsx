@@ -1,7 +1,7 @@
 "use client";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import { Loader2, LucideIcon } from "lucide-react";
+import {  LucideIcon } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -62,7 +62,7 @@ const DataCard = ({
   value = 0,
 }: DataCardProps) => {
   return (
-    <Card className="min-h-[180px] shadow-2xl ">
+    <Card className="min-h-[180px] shadow-xl ">
       {isReady ? (
         <m.div
           initial={{

@@ -7,12 +7,12 @@ import getCurrentUser from "@/actions";
 import { UserLoader } from "@/hooks/store";
 import { QueryProvider } from "@/providers/query";
 import { Inter } from "next/font/google";
+import { SessionProvider } from "next-auth/react";
 
 export const inter = Inter({
   subsets: ["latin"],
   display: "swap",
 });
-
 
 export default async function RootLayout({
   children,
@@ -26,7 +26,7 @@ export default async function RootLayout({
       <body
         className="dark:bg-[url(/assets/magicdark1.svg)] 
          bg-[url(/assets/magicdark2.svg)] bg-cover min-h-screen
-       overflow-x-hidden  "
+       overflow-x-hidden lg:!pt-20 "
       >
         <ThemeProvider
           attribute="class"
@@ -35,9 +35,13 @@ export default async function RootLayout({
           storageKey="admin-theme"
         >
           <QueryProvider>
+
+            
+              {user && <NavBar userData={user} />}
+        
             <UserLoader userData={user} />
             <Toaster richColors position="top-center" />
-            {user && <NavBar userData={user} />}
+
             {children}
           </QueryProvider>
         </ThemeProvider>

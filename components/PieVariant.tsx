@@ -18,8 +18,10 @@ const PieVariant = ({
   data: {
     category: string;
     value: number;
+    percentage:number
   }[];
 }) => {
+
   return (
     <ResponsiveContainer width="100%" height={300}>
       <PieChart>
@@ -38,13 +40,14 @@ const PieVariant = ({
                     key={`items-${i}`}
                     className="flex text-sm items-center gap-3"
                   >
+              
                     <span
                       style={{ backgroundColor: e.color }}
                       className="h-3 w-3 rounded-full"
                     />
                     <p>{e?.payload.name}</p>
                     <p className=" font-bold">
-                      {formatedPercentage(e.payload.percent * 100)}
+                      {formatedPercentage(e.payload.percentage )}
                     </p>
                   </li>
                 ))}

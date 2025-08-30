@@ -4,16 +4,14 @@ import prismadb from "@/lib/prismabd";
 import getCurrentUser from "@/actions";
 import { ProfileSchema } from "@/models/Schemas/Setup";
 
-
-
-
 const profile = new Hono()
   .post("/patch", zValidator("json", ProfileSchema), async (c) => {
-  
     const data = c.req.valid("json");
     if (!data) {
       return c.json(
-        { message: "Missing a required fields: name or username, bio, imageUrl" },
+        {
+          message: "Missing a required fields: name or username, bio, imageUrl",
+        },
         { status: 400 }
       );
     }
@@ -33,8 +31,9 @@ const profile = new Hono()
     }
   })
   .get("/", async (c) => {
+
     const user = await getCurrentUser();
-    console.log(user)
+    console.log(user);
     return c.json({ user }, { status: 200 });
   });
 

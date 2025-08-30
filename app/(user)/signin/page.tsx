@@ -24,7 +24,7 @@ export default async function Home() {
       >
         <div
           className="w-full backdrop-blur-sm border-[1px] px-4
-         bg-background/30 py-12 flex flex-col justify-between max-lg:py-6 min-h-[90dvh] shadow-xl max-lg:max-h-[calc(100dvh_-_1rem)] overflow-auto rounded-xl max-lg:border-background/70"
+         bg-background/30 py-12 flex flex-col max-w-2xl justify-between max-lg:py-6 min-h-[90dvh] shadow-xl max-lg:max-h-[calc(100dvh_-_1rem)] overflow-auto rounded-xl max-lg:border-background/70"
         >
           <AuthComponent />{" "}
           <div className=" space-y-3  w-full">

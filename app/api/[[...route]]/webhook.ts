@@ -4,14 +4,15 @@ import { Buffer } from "buffer";
 import { Subscription, WebhookPayload } from "lemonsqueezy-webhooks";
 import prismadb from "@/lib/prismabd";
 import { lemonClient } from "@/lib/lemons";
+
 export const webhook = new Hono().post("/", async (c) => {
   try {
     const secret = process.env.LEMONS_SQUEEZY_SIGNATURE as string;
     const productId = process.env.LEMONS_SQUEEZY_PRODUCT_ID as string;
-    // Get the raw body text
+
     const bodyText = await c.req.text();
     const bodyBuffer = Buffer.from(bodyText);
-    // Parse the payload
+
     const payload: WebhookPayload & {
       data: {
         attributes: {

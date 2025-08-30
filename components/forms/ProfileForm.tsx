@@ -39,7 +39,6 @@ const ProfileForm = ({ userData }: { userData: UserFetched | null }) => {
 
   async function onSubmit(values: z.infer<typeof ProfileSchema>) {
     mutate(values);
-
   }
   return (
     <div className="w-full">
@@ -54,7 +53,7 @@ const ProfileForm = ({ userData }: { userData: UserFetched | null }) => {
                 {field.value ? (
                   <FormLabel
                     className=" mr-8 relative 
-             w-[250px] flex justify-center items-center max-md:h-36 max-md:w-36 m-0 h-[250px] 
+             w-[150px] flex justify-center items-center max-md:h-36 max-md:w-36 m-0 h-[150px] 
             bg-zinc-900 rounded-full flexcenter "
                   >
                     {field?.value ? (
@@ -62,7 +61,7 @@ const ProfileForm = ({ userData }: { userData: UserFetched | null }) => {
                         <X
                           onClick={() => field.onChange("")}
                           className="absolute cursor-pointer transition-all  
-                      hover:scale-105 bg-red-500 top-2 max-md:top-0 max-md:right-0 right-2 
+                      hover:scale-105 bg-red-500 top-0 right-0 
                       rounded-full p-2 h-10 w-10 z-50"
                         ></X>
                         <Image
@@ -155,21 +154,21 @@ const ProfileForm = ({ userData }: { userData: UserFetched | null }) => {
             )}
           />
 
-          {form.formState.isDirty && (
-            <Button
-              type="submit"
-              disabled={isPending}
-              className={`${isPending ? "  bg-zinc-500" : ""} flexcenter gap-2`}
-            >
-              Submit
-              {isPending && (
-                <div
-                  className="w-4 h-4 border-2 border-white
+          <Button
+            type="submit"
+            disabled={isPending}
+            className={`${isPending ? "  bg-zinc-500" : ""} ${
+              form.formState.isDirty ? "opacity-100 scale-100" : "opacity-0 scale-75 pointer-events-none"
+            } flexcenter gap-2`}
+          >
+            Submit
+            {isPending && (
+              <div
+                className="w-4 h-4 border-2 border-white
      dark:border-black !border-t-transparent rounded-full animate-spin"
-                />
-              )}
-            </Button>
-          )}
+              />
+            )}
+          </Button>
         </form>
       </Form>
     </div>

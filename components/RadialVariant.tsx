@@ -9,7 +9,7 @@ import {
   RadialBar,
 } from "recharts";
 
-const colors: string[] = ["#dc3a55","#ffad00", "#c7ff46", "#0e98ff", ];
+const colors: string[] = ["#dc3a55", "#ffad00", "#c7ff46", "#0e98ff"];
 
 const RadialVariant = ({
   data,
@@ -17,6 +17,7 @@ const RadialVariant = ({
   data: {
     category: string;
     value: number;
+    percentage: number;
   }[];
 }) => {
   return (
@@ -39,7 +40,6 @@ const RadialVariant = ({
           align="right"
           iconType="circle"
           content={(v) => {
-
             const dataPayload = v.payload;
             return dataPayload ? (
               <ul className=" flex flex-col space-y2 ">
@@ -54,7 +54,7 @@ const RadialVariant = ({
                     />
                     <p>{e?.payload.name}</p>
                     <p className=" font-bold">
-                      {formatedPercentage((e.payload.endAngle / 360) * 100)}
+                      {formatedPercentage((e.payload.percentage ))}
                     </p>
                   </li>
                 ))}

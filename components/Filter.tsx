@@ -66,7 +66,7 @@ const Filter = () => {
   };
 
   return (
-    <div className="mb-8 flex items-center flex-wrap max-lg:justify-center gap-4">
+    <div className="mb-8 flex items-center flex-wrap max-lg:mx-auto w-fit gap-4">
       <h3 className="text-lg font-semibold">Filters:</h3>
       <Select
         disabled={isLoading}
@@ -75,7 +75,7 @@ const Filter = () => {
           handleFilterChange({ accountId: e, dateRange: undefined })
         }
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger   className="w-[180px] !bg-background">
           <SelectValue placeholder="Choose Acoount" />
         </SelectTrigger>
 
@@ -84,7 +84,9 @@ const Filter = () => {
             <>
               <SelectItem value={"all"}>all</SelectItem>
               {accounts.map((e, i) => (
-                <SelectItem value={e.id}>{e.name}</SelectItem>
+                <SelectItem key={i} value={e.id}>
+                  {e.name}
+                </SelectItem>
               ))}
             </>
           ) : (
@@ -117,16 +119,17 @@ const Filter = () => {
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
+        <PopoverContent className="p-0 w-auto " align="center">
           <Calendar
-            initialFocus
             mode="range"
+            captionLayout="dropdown"
             defaultMonth={date?.from}
             selected={date}
             onSelect={(dateRange) => {
               setDate(dateRange);
               handleFilterChange({ dateRange });
             }}
+            className="md:min-w-[500px] max-md:min-w-[250px]"
             numberOfMonths={2}
           />
         </PopoverContent>
