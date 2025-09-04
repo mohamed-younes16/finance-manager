@@ -2,27 +2,29 @@
 import { client } from "@/lib/hono";
 import { useQuery } from "@tanstack/react-query";
 
-import { useSearchParams } from "next/navigation";
+type UseGetSummaryOptions = {
+  from?: string;
+  to?: string;
+  accountId?: string;
+};
 
-export const useGetsummary = () => {
-  const params = useSearchParams();
-  const from = params.get("from") || "";
-  const to = params.get("to") || "";
-  const accountId = params.get("accountId") || "";
+export const useGetsummary = (options: UseGetSummaryOptions = {}) => {
+  const { from = "", to = "", accountId = "" } = options;
+
   const query = useQuery({
     queryKey: ["summary", { from, to, accountId }],
     queryFn: async () => {
-      const res = await client.api.summary.$get({
-        query: { accountId, to, from },
+      const response = await client.api.summary.$get({
+        query: { from, to, accountId },
       });
-      if (!res.ok) throw new Error("Failed to Fetch summary");
 
-      const data = await res.json();
+      if (!response.ok) {
+        throw new Error("Failed to fetch summary");
+      }
 
-      return {
-        ...data,
-      };
+      return await response.json();
     },
   });
+
   return query;
 };

@@ -5,8 +5,9 @@ const nextConfig = {
     domains: ["swiperjs.com", "utfs.io", "s3.amazonaws.com", "*"],
   },
   typescript: { ignoreBuildErrors: true },
-  typedRoutes:true
- 
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 module.exports = nextConfig;

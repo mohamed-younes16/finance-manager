@@ -32,10 +32,9 @@ const Filter = () => {
     from: from ? parse(from, "yyyy-MM-dd", new Date()) : defFrom,
     to: to ? parse(to, "yyyy-MM-dd", new Date()) : defTo,
   });
-
   const router = useRouter();
   const { data: accounts, isLoading: l1 } = useGetAccounts();
-  const { isLoading: l2 } = useGetsummary();
+  const { isLoading: l2 } = useGetsummary({ from, to, accountId });
   const isLoading = l1 || l2;
   const { from: fromState, to: toState, setFrom, setTo } = useStore();
 
@@ -67,7 +66,7 @@ const Filter = () => {
       { skipNull: true, skipEmptyString: true }
     );
 
-    router.push(url, { scroll: false });
+    router.push(url as any, { scroll: false });
   };
   useEffect(() => {
     console.log("here");

@@ -20,7 +20,7 @@ export default async function RootLayout({
         <CliComp>
           <Welcome />
           <Suspense fallback={<div>Loading filter</div>}>
-            {" "}
+     
             <Filter />
           </Suspense>
         </CliComp>{" "}

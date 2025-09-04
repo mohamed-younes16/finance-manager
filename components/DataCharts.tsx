@@ -5,16 +5,20 @@ import Chart from "./Chart";
 import BarVariant from "./BarVariant";
 import SpendingPie from "./SpendingCategory";
 import { useGetPlan } from "@/hooks/purchase-hooks";
+import { useSearchParams } from "next/navigation";
 
 export const DataCharts = () => {
-  const { data, isLoading } = useGetsummary();
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from") || "";
+  const to = searchParams.get("to") || "";
+  const accountId = searchParams.get("accountId") || "";
+  const { data, isLoading } = useGetsummary({ from, to, accountId });
   const { data: planData, isLoading: isLoadingPlan } = useGetPlan();
 
   return (
     <div className="  grid  gap-8 lg:grid-cols-6  grid-cols-1">
       <div className="col-span-1 lg:col-span-4">
         {" "}
-  
         {data && planData && (
           <>
             <Chart data={data.days} isPro={planData.isPro} />

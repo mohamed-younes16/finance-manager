@@ -9,7 +9,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { BarChart3, Minimize2 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Button } from "../ui/button";
@@ -27,16 +27,22 @@ const MainNav = () => {
   return (
     <div className=" flex gap-[10px] relative">
       <div className="lg:hidden">
-        <Sheet open={isSheetOpen } onOpenChange={setIsSheetOpen}>
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild className=" ">
             <Button>
               {" "}
               <BarChart3 className={`rotate-[270deg]`} />
             </Button>
           </SheetTrigger>
-          <SheetContent side={"bottom"} className="text-center rounded-t-xl  flex flex-col items-center pt-4  ">
+          <SheetContent
+            side={"bottom"}
+            className="text-center rounded-t-xl  flex flex-col items-center pt-4  "
+          >
             <div className="h-full w-fit space-y-3">
-              <Link className="min-h-[50px] block mx-auto w-[50px] relative " href="/">
+              <Link
+                className="min-h-[50px] block mx-auto w-[50px] relative "
+                href="/"
+              >
                 <Image
                   loading="eager"
                   alt="logo"
@@ -67,7 +73,10 @@ const MainNav = () => {
             </SheetClose>
 
             <Separator />
-            <UserHandler userData={userData} />
+            <Suspense>
+              {" "}
+              <UserHandler userData={userData} />{" "}
+            </Suspense>
           </SheetContent>
         </Sheet>
       </div>

@@ -2,35 +2,50 @@
 import Heading from "@/components/Heading";
 import { DataTable } from "@/components/ui/data-table";
 import { Users2Icon } from "lucide-react";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { TransactionResponseGetType, columns } from "./components/columns";
-
 import CliComp from "@/providers/modalProvider";
 import FormSheet from "@/components/sheets/FormSheet";
 import {
   useDeleteTransaction,
   useGetTransactions,
 } from "@/hooks/transcation-hooks";
-
 import TableSkeleton from "@/components/TableSkeleton";
 import { formatMilliunits } from "@/utils";
 import UploadButton from "@/components/inputs/UploadButton";
 import ImportCard from "@/components/forms/ImportCard";
 import { Button } from "@/components/ui/button";
 import { useGetPlan } from "@/hooks/purchase-hooks";
+import { useSearchParams } from "next/navigation";
 
 enum VARIANTS {
   LIST = "LIST",
   IMPORT = "IMPORT",
 }
+
 const INITIAL_IMPORT_RESULTS = {
   data: [],
   errors: [],
   meta: [],
 };
 
-const page = () => {
+
+const TransactionsContent = () => {
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from") || "";
+  const to = searchParams.get("to") || "";
+  const accountId = searchParams.get("accountId") || "";
+
+  const { data: transactions, isLoading } = useGetTransactions({
+    from,
+    to,
+    accountId,
+  });
+  const { mutate, isPending } = useDeleteTransaction();
+  const isDisabled = isLoading || isPending;
+  const { data: plan } = useGetPlan();
+
   const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
   const [importRes, setImportRes] = useState(INITIAL_IMPORT_RESULTS);
 
@@ -38,14 +53,12 @@ const page = () => {
     setVariant(VARIANTS.LIST);
     setImportRes(INITIAL_IMPORT_RESULTS);
   };
+
   const onUpload = (res: typeof INITIAL_IMPORT_RESULTS) => {
     setVariant(VARIANTS.IMPORT);
     setImportRes(res);
   };
-  const { data: transactions, isLoading } = useGetTransactions();
-  const { mutate, isPending } = useDeleteTransaction();
-  const isDisabeled = isLoading || isPending;
-  const { data: plan } = useGetPlan();
+
   let formattedTransactions: TransactionResponseGetType[] = [];
   if (transactions) {
     formattedTransactions = transactions.map((e) => ({
@@ -60,16 +73,15 @@ const page = () => {
   }
 
   return (
-    <div className="bg-background min-h-screen rounded-md py-4  w-full px-8 max-lg:px-4 ">
+    <div className="bg-background min-h-screen rounded-md py-4 w-full px-8 max-lg:px-4">
       {variant === VARIANTS.IMPORT ? (
-        <div className="space-y-6 ">
+        <div className="space-y-6">
           <div className="flex items-center gap-x-4">
             <UploadButton onUpload={onUpload} />
             <Button size={"sm"} onClick={endImport}>
               Cancel
             </Button>
           </div>
-
           <ImportCard data={importRes.data} onSubmit={endImport} />
         </div>
       ) : (
@@ -77,7 +89,6 @@ const page = () => {
           <div className="flex mb-4 items-center max-lg:justify-center max-lg:gap-6 flex-wrap justify-between">
             <h1 className="text-xl font-bold">Transactions Page</h1>
             <CliComp>
-              {" "}
               {!!plan && plan.isPro && <UploadButton onUpload={onUpload} />}
               <FormSheet type="transaction" />
             </CliComp>
@@ -89,20 +100,20 @@ const page = () => {
               }
               title={`List Of Transactions`}
               description="Manage all your Transactions ."
-            />{" "}
-          </div>{" "}
+            />
+          </div>
           <Separator className="my-6" />
-          {!!transactions ? (
+          {isLoading ? (
+            <TableSkeleton />
+          ) : (
             <DataTable
-              queryKey={["transactions"]}
+              queryKey={["transactions", { from, to, accountId }]}
               OnDelete={(Ids) => mutate({ Ids: Ids.map((e) => e.original.id) })}
-              disabled={isDisabeled}
+              disabled={isDisabled}
               searchKey="name"
               columns={columns}
               data={formattedTransactions}
             />
-          ) : (
-            <TableSkeleton />
           )}
         </>
       )}
@@ -110,4 +121,18 @@ const page = () => {
   );
 };
 
-export default page;
+const TransactionsPage = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      }
+    >
+      <TransactionsContent />
+    </Suspense>
+  );
+};
+
+export default TransactionsPage;

@@ -2,7 +2,7 @@ import { FileSearch2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import AreaVariant from "./AreaVariant";
 import BarVariant from "./BarVariant";
-import LineVariant from "./LineVariant";
+
 import { useState } from "react";
 
 import {
@@ -16,8 +16,8 @@ import PieVariant from "./PieVariant";
 import RadarVariant from "./RadarVariant";
 import RadialVariant from "./RadialVariant";
 
-const freeVariants = ["pie"] as const; // Free users get area and bar charts
-const proVariants = ["pie", "radar", "radio"] as const; // P
+const freeVariants = ["pie"] as const;
+const proVariants = ["pie", "radar", "radio"] as const;
 
 type VariantChartType = (typeof freeVariants | typeof proVariants)[number];
 
@@ -39,6 +39,7 @@ const SpendingCategory = ({
   const da = data.map((e) => {
     return { ...e, percentage: (e.value / total) * 100 };
   });
+
   return (
     <Card className=" shadow-2xl">
       <CardHeader className="flex flex-row justify-between items-center">
@@ -52,7 +53,9 @@ const SpendingCategory = ({
           </SelectTrigger>
           <SelectContent>
             {variants.map((e, i) => (
-              <SelectItem key={e} value={variants[i]}>{variants[i]}</SelectItem>
+              <SelectItem key={e} value={variants[i]}>
+                {variants[i]}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>

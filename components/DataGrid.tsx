@@ -6,14 +6,17 @@ import { useSearchParams } from "next/navigation";
 import DataCard from "./DataCard";
 
 const DataGrid = () => {
-  const { data, isLoading } = useGetsummary();
-  const params = useSearchParams();
-  const from = params.get("from") || "";
-  const to = params.get("to") || "";
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from") || "";
+  const to = searchParams.get("to") || "";
+  const accountId = searchParams.get("accountId") || "";
+
+  const { data, isLoading } = useGetsummary({ from, to, accountId });
   const dateRange = formatDateRange({
-    from,
-    to,
+    from: from,
+    to: to,
   });
+
   return (
     <div className=" grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8  whitespace-nowrap">
       <DataCard
