@@ -2,7 +2,11 @@
 const nextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
-    domains: ["swiperjs.com", "utfs.io", "s3.amazonaws.com", "*"],
+    remotePatterns: [
+      { hostname: "swiperjs.com" },
+      { hostname: "utfs.io" },
+      { hostname: "s3.amazonaws.com" },
+    ],
   },
   typescript: { ignoreBuildErrors: true },
   eslint: {

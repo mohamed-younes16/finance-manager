@@ -12,7 +12,7 @@ type UseGetTransactionsOptions = {
 
 export const useGetTransactions = (options: UseGetTransactionsOptions = {}) => {
   const { from = "", to = "", accountId = "" } = options;
-
+  console.log(options);
   const query = useQuery({
     queryKey: ["transactions", { from, to, accountId }],
     queryFn: async () => {

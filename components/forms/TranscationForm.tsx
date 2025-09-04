@@ -73,10 +73,6 @@ const TransactionForm = ({
       : "positive"
   );
 
-  useEffect(() => {
-    isSuccess && OnDone();
-  }, [isSuccess]);
-
   const form = useForm<z.infer<typeof transactionSchema>>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
@@ -86,6 +82,7 @@ const TransactionForm = ({
         (accounts && accounts[0]?.id) ||
         "",
       categoryId: defaultValues?.categoryId ?? categories?.[0]?.id ?? "",
+      notes: "",
     },
   });
 
@@ -113,6 +110,12 @@ const TransactionForm = ({
     });
     OnDone();
   };
+  useEffect(() => {
+    isSuccess && OnDone();
+  }, [isSuccess]);
+  useEffect(() => {
+    console.log(form.watch());
+  }, [form.watch()]);
 
   return (
     <Form {...form}>
@@ -189,7 +192,7 @@ const TransactionForm = ({
                     type="account"
                     data={accounts}
                     setRefrence={(v) =>
-                      setValue("accountId", v, {
+                      setValue("accountId", v?.id ?? "", {
                         shouldDirty: true,
                         shouldTouch: true,
                         shouldValidate: true,
@@ -218,11 +221,12 @@ const TransactionForm = ({
                     data={categories}
                     type="category"
                     setRefrence={(v) => {
-                      setValue("categoryId", v, {
+                      setValue("categoryId", v?.id ?? "", {
                         shouldDirty: true,
                         shouldTouch: true,
                         shouldValidate: true,
                       });
+                      setValue("category", v?.name ?? "");
                     }}
                     Refrence={watch("categoryId") || ""}
                   />
@@ -269,7 +273,7 @@ const TransactionForm = ({
 
         <Button
           type="submit"
-          disabled={isPending || (!defaultValues && !formState.isValid)}
+          disabled={isPending || !formState.isValid}
           className={`${
             isPending && "opacity-50"
           } bg-minor flexcenter w-full gap-2`}

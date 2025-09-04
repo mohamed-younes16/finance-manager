@@ -29,9 +29,9 @@ const transactions = new Hono()
     zValidator(
       "query",
       z.object({
-        from: z.string(),
-        to: z.string(),
-        accountId: z.string(),
+        from: z.string().optional(),
+        to: z.string().optional(),
+        accountId: z.string().optional(),
       })
     ),
     async (c) => {
@@ -202,18 +202,15 @@ const transactions = new Hono()
         return c.json({ message: "Unauthorized _______________" }, 401);
       }
 
-      // Fetch all existing categories for the user
       const existingCategories = await prismadb.category.findMany({
         where: { ownerId: user.id },
       });
 
-      // Create a map of existing categories for quick lookup
       const categoryMap = new Map(
         existingCategories.map((cat) => [cat.name, cat.id])
       );
 
-      // Process categories creation or connection
-      for (const el of values) {
+  for (const el of values) {
         const { category } = el;
 
         if (category && !categoryMap.has(category)) {

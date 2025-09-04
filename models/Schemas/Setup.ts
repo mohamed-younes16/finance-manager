@@ -24,7 +24,7 @@ export const RegisterSchema = z
 export const transactionSchema = z.object({
   amount: z.number({ error: () => ({ message: "Amount is required" }) }),
   payee: z.string({ error: () => ({ message: "Payee is required" }) }).min(1),
-  notes: z.string().nullable(),
+  notes: z.string().optional(),
   createdAt: z.string(),
   category: z.string(),
   accountId: z

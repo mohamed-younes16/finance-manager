@@ -13,18 +13,30 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ArrowBigDownDash, ArrowBigUp } from "lucide-react";
 import { useState } from "react";
-
+type category = { name: string; id: string; createdAt: string };
+type account = {
+  name: string;
+  id: string;
+  createdAt: string;
+};
 const CheckRefrence = ({
   data,
   setRefrence,
   Refrence,
   type,
-}: {
-  data: { name: string; id: string; createdAt: string }[];
-  setRefrence: (v: string) => void;
-  Refrence: string;
-  type: "account" | "category";
-}) => {
+}:
+  | {
+      data: category[];
+      setRefrence: (v: category | null) => void;
+      Refrence: string;
+      type: "category";
+    }
+  | {
+      data: account[];
+      setRefrence: (v: account | null) => void;
+      Refrence: string;
+      type: "account";
+    }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [choosen, setChoosen] = useState<string>(
     (data && data.filter((e) => e.id === Refrence)[0]?.name) || ""
@@ -62,7 +74,7 @@ const CheckRefrence = ({
           {data.map((e, i) => (
             <DropdownMenuCheckboxItem
               onCheckedChange={(c) => {
-                c ? setRefrence(e.id) : setRefrence("");
+                c ? setRefrence(e) : setRefrence(null);
 
                 c
                   ? setChoosen(e.name || "")
