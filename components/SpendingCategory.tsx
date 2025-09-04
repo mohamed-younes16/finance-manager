@@ -52,7 +52,7 @@ const SpendingCategory = ({
           </SelectTrigger>
           <SelectContent>
             {variants.map((e, i) => (
-              <SelectItem value={variants[i]}>{variants[i]}</SelectItem>
+              <SelectItem key={e} value={variants[i]}>{variants[i]}</SelectItem>
             ))}
           </SelectContent>
         </Select>

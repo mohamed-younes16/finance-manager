@@ -60,7 +60,17 @@ export const authOpts: AuthOptions = {
   session: {
     strategy: "jwt",
   },
- 
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-token", // default dev name
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: false, 
+      },
+    },
+  },
 };
 export const handler = NextAuth(authOpts);
 export { handler as GET, handler as POST };

@@ -26,7 +26,7 @@ export default async function RootLayout({
       <body
         className="dark:bg-[url(/assets/magicdark1.svg)] 
          bg-[url(/assets/magicdark2.svg)] bg-cover min-h-screen
-       overflow-x-hidden lg:!pt-20 "
+       overflow-x-hidden  "
       >
         <ThemeProvider
           attribute="class"

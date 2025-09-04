@@ -4,7 +4,7 @@ import axios from "axios";
 import getCurrentUser from "@/actions";
 import type { CreateCheckoutResult } from "lemonsqueezy.ts/dist/types";
 import { getUserSubscriptionPlan } from "@/lib/subscription";
-import { createCheckout } from "@lemonsqueezy/lemonsqueezy.js";
+
 export type CreateCheckoutResponse = {
   checkoutURL: string;
 };
@@ -48,20 +48,7 @@ export const purchase = new Hono()
           productId: process.env.LEMONS_SQUEEZY_PRODUCT_ID,
         })
       ).data[0];
-      const test = await createCheckout(
-        process.env.LEMON_STORE_ID!.toString(),
-        variant.id,
-        {
-          checkoutData: {
-            email: user.email!,
-            custom: { userId: user.id, email: user.email },
-          },
-          testMode: true,
-          checkoutOptions: {
-            dark: true,
-          },
-        }
-      ).then((e) => console.log(e.data));
+
       const checkout = (
         await axios.post(
           "https://api.lemonsqueezy.com/v1/checkouts",
@@ -93,7 +80,7 @@ export const purchase = new Hono()
         )
       ).data as CreateCheckoutResult;
       const { url, checkout_data } = checkout.data.attributes;
-      console.log(checkout_data);
+
       return c.json({ checkoutUrl: url }, 201);
     } catch (error) {
       console.log(error);

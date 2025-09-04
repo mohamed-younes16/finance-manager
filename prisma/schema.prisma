@@ -28,6 +28,7 @@ model User {
   customerId       String?
   variantId        Int?
   currentPeriodEnd DateTime?
+  productId        String?
 
   @@unique([name])
   @@index([id])

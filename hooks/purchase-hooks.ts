@@ -1,6 +1,6 @@
 "use client";
 import { client } from "@/lib/hono";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery,  } from "@tanstack/react-query";
 import { InferRequestType, InferResponseType } from "hono";
 import { toast } from "sonner";
 
@@ -20,7 +20,9 @@ export const useGetPurchase = () => {
 
       return data;
     },
+    
   });
+
   return query;
 };
 export const useGetPlan = () => {

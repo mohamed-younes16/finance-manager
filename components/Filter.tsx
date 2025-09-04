@@ -18,7 +18,8 @@ import { CalendarIcon, Loader2 } from "lucide-react";
 import { Calendar } from "./ui/calendar";
 import { format, parse, subDays } from "date-fns";
 import { DateRange } from "react-day-picker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useStore } from "@/hooks/store";
 
 const Filter = () => {
   const searchParams = useSearchParams();
@@ -36,6 +37,7 @@ const Filter = () => {
   const { data: accounts, isLoading: l1 } = useGetAccounts();
   const { isLoading: l2 } = useGetsummary();
   const isLoading = l1 || l2;
+  const { from: fromState, to: toState, setFrom, setTo } = useStore();
 
   const handleFilterChange = (params: {
     accountId?: string;
@@ -50,6 +52,9 @@ const Filter = () => {
     }
 
     if (params.dateRange !== undefined) {
+      setFrom(params.dateRange.from);
+      setTo(params.dateRange.to);
+
       query.from = format(params.dateRange.from || defFrom, "yyyy-MM-dd");
       query.to = format(params.dateRange.to || defTo, "yyyy-MM-dd");
     }
@@ -64,6 +69,19 @@ const Filter = () => {
 
     router.push(url, { scroll: false });
   };
+  useEffect(() => {
+    console.log("here");
+    if (fromState && toState && !(from && to)) {
+      setDate({ from: fromState, to: toState });
+      handleFilterChange({
+        accountId,
+        dateRange: {
+          from: fromState,
+          to: toState,
+        },
+      });
+    }
+  }, [searchParams]);
 
   return (
     <div className="mb-8 flex items-center flex-wrap max-lg:mx-auto w-fit gap-4">
@@ -75,7 +93,7 @@ const Filter = () => {
           handleFilterChange({ accountId: e, dateRange: undefined })
         }
       >
-        <SelectTrigger   className="w-[180px] !bg-background">
+        <SelectTrigger className="w-[180px] !bg-background">
           <SelectValue placeholder="Choose Acoount" />
         </SelectTrigger>
 

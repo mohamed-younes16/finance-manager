@@ -11,11 +11,11 @@ export default async function RootLayout({
   children: ReactNode;
 }) {
   return (
-    <div suppressHydrationWarning className=" min-h-screen ">
+    <div suppressHydrationWarning className=" min-h-screen lg:!pt-20 ">
       <div
         className=" w-[100dvw]   max-lg:h-[35dvh] pt-6 pb-14
          max-lg:pt-6  max-lg:px-4 px-16
-        from-[40%]  bg-gradient-to-b space-y-6  from-main to-minor   z-[0]"
+        from-[40%]  bg-gradient-to-t space-y-6  from-main to-minor   z-[0]"
       >
         <CliComp>
           <Welcome />

@@ -18,7 +18,7 @@ export const useGetAccounts = () => {
   });
   return query;
 };
-export const useGetAccount = (id?: string) => {
+export const useGetAccount = (id: string) => {
   const query = useQuery({
     enabled: !!id,
     queryKey: ["accounts", { id }],

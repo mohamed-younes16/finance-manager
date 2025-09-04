@@ -15,7 +15,7 @@ type TransactionData = {
   accountRef: { connect: { id: string; ownerId: string } };
   amount: number;
   payee: string;
-  notes: string;
+  notes: string | null;
   categoryRef?: {
     connect?: { id: string; ownerId: string };
     create?: { name: string; ownerId: string };

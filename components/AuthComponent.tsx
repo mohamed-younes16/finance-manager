@@ -50,7 +50,7 @@ const AuthComponent = () => {
           >
             <RegisterForm type="register" />
           </motion.div>
-          <div className="flexcenter text-lg flex-wrap  font-medium gap-2">
+          <div className="flexcenter flex-wrap text-muted-foreground font-medium gap-2">
             <p>New to Store   {open == "register" ? "find your account" : "create an account"}!</p>
             <div
               className="text-minor  font-bold cursor-pointer "

@@ -42,26 +42,29 @@ const NavBar = ({ userData }: { userData: UserFetched | null }) => {
           </div>
         )}
         <div
-          className="flex gap-[1.25rem]  max-md:!justify-center 
+          className="flex gap-[1.25rem]  
            max-lg:flex-row-reverse max-lg:justify-start items-center w-full lg:justify-end"
         >
           <div
             className="flex items-center justify-end gap-3
              max-md:w-full max-md:max-w-sm mx-3 lg:min-w-[150px]"
           >
+            {" "}
             <Suspense>
               {matches ? (
-                <div className="md:min-w-[90px] max-md:w-full ">
-                  <UserHandler userData={userData} />
-                </div>
+                <>
+                  {" "}
+                  <Button className="max-lg:hidden flexcenter w-16 p-0 ">
+                    <ModeToggle />
+                  </Button>
+                  <div className="md:min-w-[90px] max-md:w-full ">
+                    <UserHandler userData={userData} />
+                  </div>{" "}
+                </>
               ) : (
                 <MainNav />
               )}
             </Suspense>
-
-            <Button className="max-lg:hidden">
-              <ModeToggle />
-            </Button>
           </div>
         </div>
       </div>

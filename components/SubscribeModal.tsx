@@ -12,17 +12,30 @@ import {
 } from "@/components/ui/dialog";
 import { CheckCircle, Crown } from "lucide-react";
 import { Button } from "./ui/button";
-import { useGetPurchase } from "@/hooks/purchase-hooks";
-import { useRouter } from "next/navigation";
 import { motion as m } from "framer-motion";
 import Image from "next/image";
 import { Separator } from "./ui/separator";
+import { usePolarCheckout } from "@/hooks/polar-hooks";
+import { useStore } from "@/hooks/store";
+import { useTheme } from "next-themes";
+import { usechargilyCheckout } from "@/hooks/chargily-hooks";
 const SubscribeModal = () => {
+  const { user } = useStore();
   const features = ["Upload CSV files", "Diffrent Chart types"];
-  const { data, isLoading, isSuccess } = useGetPurchase();
+  const { theme } = useTheme();
+  // const {
+  //   data: data,
+  //   isLoading,
+  //   isSuccess,
+  // } = usePolarCheckout(user!, theme as "light" | "dark");
+
+  const { data, isSuccess, isLoading } = usechargilyCheckout(user);
+  
   const Onclick = async () => {
-    isSuccess && data && window.open(`${data.checkoutUrl}`, "_blank");
+    if (isSuccess && data && data.checkoutURL)
+      window.location.href = data.checkoutURL;
   };
+
   return (
     <div>
       <Dialog>
@@ -97,7 +110,7 @@ const SubscribeModal = () => {
             viewport={{ once: true }}
           >
             {" "}
-            <Button onClick={Onclick}  className="w-full bg-minor">
+            <Button onClick={Onclick} className="w-full bg-minor">
               Take me there
             </Button>
           </m.div>

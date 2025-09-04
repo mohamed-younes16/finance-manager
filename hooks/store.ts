@@ -13,14 +13,22 @@ type Store = {
   setUser: (v: any) => void;
   isFormSheetOpen: boolean;
   setIsFormSheetOpen: (v: boolean) => void;
-  choosenId: string | undefined;
+  choosenId: string ;
   setchoosenId: (v: string | undefined) => void;
+  from: Date | undefined;
+  to: Date | undefined;
+  setFrom: (d: Date | undefined) => void;
+  setTo: (d: Date | undefined) => void;
 };
 
 export const useStore = create<Store>()(
   persist(
     (set) => ({
-      choosenId: undefined,
+      from: undefined,
+      to: undefined,
+      setFrom: (from) => set(() => ({ from })),
+      setTo: (to) => set(() => ({ to })),
+      choosenId: "",
       setchoosenId: (v) => set(() => ({ choosenId: v, isFormSheetOpen: !!v })),
       isFormSheetOpen: false,
       setIsFormSheetOpen: (v: boolean) => set(() => ({ isFormSheetOpen: v })),
@@ -32,7 +40,7 @@ export const useStore = create<Store>()(
       user: null,
       setUser: (v) => set(() => ({ user: v })),
     }),
-    { name: "data", storage: createJSONStorage(() => sessionStorage) }
+    { name: "data", storage: createJSONStorage(() => localStorage) }
   )
 );
 interface UserLoaderProps {

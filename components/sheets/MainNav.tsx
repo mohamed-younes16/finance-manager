@@ -27,16 +27,16 @@ const MainNav = () => {
   return (
     <div className=" flex gap-[10px] relative">
       <div className="lg:hidden">
-        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+        <Sheet open={isSheetOpen } onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild className=" ">
             <Button>
               {" "}
               <BarChart3 className={`rotate-[270deg]`} />
             </Button>
           </SheetTrigger>
-          <SheetContent className="p-3    flex flex-col items-start pt-6  ">
-            <div className="h-full w-full space-y-3">
-              <Link className="min-h-[65px] block w-[65px] relative " href="/">
+          <SheetContent side={"bottom"} className="text-center rounded-t-xl  flex flex-col items-center pt-4  ">
+            <div className="h-full w-fit space-y-3">
+              <Link className="min-h-[50px] block mx-auto w-[50px] relative " href="/">
                 <Image
                   loading="eager"
                   alt="logo"
@@ -45,7 +45,7 @@ const MainNav = () => {
                   src={"/assets/logo.svg"}
                 />
               </Link>
-              <div className="  w-full">
+              <div className="max-w-fit">
                 <SheetHeader className="mb-4">
                   <SheetTitle>Check The Pages</SheetTitle>
                   <SheetDescription>

@@ -4,9 +4,9 @@ import { ReactNode } from "react";
 
 const SignOutButton = ({ children }: { children: ReactNode }) => {
   return (
-    <button className="w-full" onClick={() => signOut({ redirect: true ,})}>
-      {children}{" "}
-    </button>
+    <div  className="w-full" onClick={() => signOut({ redirect: true ,})}>
+      {children}
+    </div>
   );
 };
 

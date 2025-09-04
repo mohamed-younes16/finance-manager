@@ -28,7 +28,7 @@ export const useGetTransactions = () => {
 
 //////////////////////////////////////////////////////////////////
 
-export const useGetTransaction = (id?: string) => {
+export const useGetTransaction = (id: string) => {
   const query = useQuery({
     queryKey: ["transaction", { id }],
     queryFn: async () => {

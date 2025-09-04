@@ -1,5 +1,4 @@
 import getCurrentUser from "@/actions";
-import { lemonClient } from "./lemons";
 import prismadb from "./prismabd";
 
 export async function getUserSubscriptionPlan() {
@@ -10,37 +9,21 @@ export async function getUserSubscriptionPlan() {
       subscriptionId: true,
       currentPeriodEnd: true,
       customerId: true,
-      variantId: true,
+      productId: true,
     },
   });
-
   if (!user) throw new Error("User not found");
 
+  // Check if subscription is active
   const isPro = !!(
-    user.variantId &&
+    user.productId &&
     user.currentPeriodEnd &&
     user.currentPeriodEnd.getTime() + 86_400_000 > Date.now()
   );
 
-  const subscription = user.subscriptionId
-    ? await lemonClient.retrieveSubscription({
-        id: user.subscriptionId,
-      })
-    : null;
-
-  let isCanceled = false;
-
-  if (isPro && user.subscriptionId && !!subscription && !!subscription.data) {
-    isCanceled = subscription.data.attributes.cancelled;
-  }
-
   return {
     ...user,
     currentPeriodEnd: user.currentPeriodEnd?.toISOString(),
-    isCanceled,
     isPro,
-    updatePaymentMethodURL: subscription
-      ? subscription.data.attributes.urls.update_payment_method
-      : null,
   };
 }

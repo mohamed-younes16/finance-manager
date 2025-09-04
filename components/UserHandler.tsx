@@ -1,3 +1,4 @@
+"use client"
 import { useSearchParams } from "next/navigation";
 import {
   Popover,
@@ -5,7 +6,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Image from "next/image";
-
 
 import MenuItem from "./navbar/MenuItem";
 import { LucideLogOut, Menu, UserIcon } from "lucide-react";
@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ModeToggle } from "./ui/themeButton";
 import ImageContainer from "./ImageContainer";
-
+import { UserFetched } from "..";
 
 const UserHandler = ({ userData }: { userData: UserFetched | null }) => {
   const searchParams = useSearchParams();
@@ -39,10 +39,10 @@ const UserHandler = ({ userData }: { userData: UserFetched | null }) => {
                   shadow-[inset_0px_3px_6px_0px_hsl(var(--foreground)_/_0.2)]
                   border-foreground/20 font-semibold border max-lg:w-full  hover:shadow-[inset_0px_3px_6px_0px_hsl(var(--foreground)_/_0)] cursor-pointer  rounded-full py-2 gap-4"
         >
-          <Menu className="h-6 transition-all  group-hover/profile:text-main" />
+          <Menu className="h-8 transition-all  group-hover/profile:text-main" />
 
           {userData?.imageUrl ? (
-            <div className=" relative overflow-hidden rounded-full max-h-[35px]  h-[35px] max-w-[35px] w-[35px] ">
+            <div className=" relative overflow-hidden rounded-full max-h-[35px]  size-8 max-w-[32px]  ">
               <ImageContainer
                 alt=""
                 src={userData?.imageUrl}
@@ -60,7 +60,7 @@ const UserHandler = ({ userData }: { userData: UserFetched | null }) => {
           )}
         </div>
       </PopoverTrigger>
-      <PopoverContent className="-translate-x-4  p-2">
+      <PopoverContent align="center" className="max-lg:!text-sm p-2">
         {userData && (
           <MenuItem onclick={() => {}}>
             <Link className="w-full flex gap-2" href={"/profile"}>
@@ -72,7 +72,7 @@ const UserHandler = ({ userData }: { userData: UserFetched | null }) => {
         <MenuItem className="lg:hidden">
           <div className="flex gap-2 items-center">
             <ModeToggle>
-              <div className="ml-2 text-lg">Toggle Theme</div>
+              <div className="ml-2 ">Toggle Theme</div>
             </ModeToggle>
           </div>
         </MenuItem>

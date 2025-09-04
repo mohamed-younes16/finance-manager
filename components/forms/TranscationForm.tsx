@@ -85,10 +85,7 @@ const TransactionForm = ({
         (defaultValues && defaultValues?.accountId) ||
         (accounts && accounts[0]?.id) ||
         "",
-      categoryId:
-        (defaultValues && defaultValues?.categoryId) ||
-        (categories && categories[0]?.id) ||
-        "",
+      categoryId: defaultValues?.categoryId ?? categories?.[0]?.id ?? "",
     },
   });
 
@@ -119,7 +116,7 @@ const TransactionForm = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="createdAt"
@@ -145,7 +142,7 @@ const TransactionForm = ({
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className=" p-0" align="start">
                   <Calendar
                     mode="single"
                     selected={new Date(field.value || "")}
@@ -153,7 +150,6 @@ const TransactionForm = ({
                     disabled={(date) =>
                       date > new Date() || date < new Date("1900-01-01")
                     }
-                    initialFocus
                   />
                 </PopoverContent>
               </Popover>
@@ -222,7 +218,6 @@ const TransactionForm = ({
                     data={categories}
                     type="category"
                     setRefrence={(v) => {
-
                       setValue("categoryId", v, {
                         shouldDirty: true,
                         shouldTouch: true,
@@ -265,7 +260,7 @@ const TransactionForm = ({
             <FormItem className="flex flex-col">
               <FormLabel className=" font-semi-bold text-lg">Notes</FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Textarea {...field} value={field.value ?? ""} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -274,7 +269,6 @@ const TransactionForm = ({
 
         <Button
           type="submit"
-
           disabled={isPending || (!defaultValues && !formState.isValid)}
           className={`${
             isPending && "opacity-50"

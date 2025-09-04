@@ -24,6 +24,7 @@ export default async function getCurrentUser() {
         onboarded: true,
         bio: true,
         id: true,
+        customerId: true,
       },
     });
     return user;

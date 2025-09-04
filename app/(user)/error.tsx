@@ -1,12 +1,8 @@
 "use client";
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-const Error = ({ err }: { err: any }) => {
+const Error = () => {
   const router = useRouter();
-  useEffect(() => {
-    console.error(err);
-  }, []);
   return (
     <div
       className="

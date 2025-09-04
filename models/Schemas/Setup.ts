@@ -22,18 +22,18 @@ export const RegisterSchema = z
   });
 
 export const transactionSchema = z.object({
-  amount: z.number({ required_error: "Amount must be a Provided" }),
-  payee: z.string({ required_error: "Payee is required" }).min(1),
-  notes: z.string().default(""),
+  amount: z.number({ error: () => ({ message: "Amount is required" }) }),
+  payee: z.string({ error: () => ({ message: "Payee is required" }) }).min(1),
+  notes: z.string().nullable(),
+  createdAt: z.string(),
+  category: z.string(),
   accountId: z
-    .string({ required_error: "Account reference is required" })
+    .string({ error: () => ({ message: "Account reference required" }) })
     .min(1),
-  categoryId: z.string().nullable().default(""),
-  category: z.string().nullable().default(""),
-  createdAt: z.string().nullable().default(""),
+  categoryId: z.string(),
 });
 export const Loginschema = z.object({
-  email: z.string().min(4).email(),
+  email: z.email(),
   password: z
     .string()
     .min(4, { message: "must be at least 8 characters long" })

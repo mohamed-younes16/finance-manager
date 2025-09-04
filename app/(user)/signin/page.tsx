@@ -13,8 +13,9 @@ export const metadata = {
 export default async function Home() {
   return (
     <div
-      className="min-h-screen bg-cover 
+      className="min-h-screen bg-cover  transition-all
      max-lg:bg-[url(/assets/auth-bg.svg)] 
+         dark:max-lg:bg-[url(/assets/auth-bg-dark.svg)] 
      relative max-lg:flex-col max-lg:py-2 flexcenter bg-white dark:bg-neutral-900"
     >
       <div
@@ -23,16 +24,16 @@ export default async function Home() {
           transition-all  relative z-10 max-lg:w-full  flexcenter"
       >
         <div
-          className="w-full backdrop-blur-sm border-[1px] px-4
-         bg-background/30 py-12 flex flex-col max-w-2xl justify-between max-lg:py-6 min-h-[90dvh] shadow-xl max-lg:max-h-[calc(100dvh_-_1rem)] overflow-auto rounded-xl max-lg:border-background/70"
+          className="w-full  backdrop-blur-[3px] border-[1px] px-4
+  bg-accent/40 dark:bg-accent/60  py-12 flex max-h-fit flex-col max-w-lg max-lg:max-w-md max-lg:py-6 lg:min-h-[90dvh] shadow-xl  rounded-xl max-lg:border-background/70"
         >
           <AuthComponent />{" "}
-          <div className=" space-y-3  w-full">
-            <Separator className=" mt-auto" />
+          <div className="   w-full">
+            <Separator className=" mt-auto my-3" />
             <MenuItem className="bg-background  mx-auto w-fit border-foreground shadow-xl">
               <div className="flex gap-2 items-center">
                 <ModeToggle>
-                  <div className="ml-2 text-lg">Toggle Theme</div>
+                  <div className="ml-2 ">Toggle Theme</div>
                 </ModeToggle>
               </div>
             </MenuItem>
@@ -40,18 +41,19 @@ export default async function Home() {
         </div>{" "}
       </div>
 
-      <div
-        className="lg:w-[40%] lg:min-h-screen max-lg:absolute 
-       max-lg:rounded-full  max-lg:w-[150px] max-lg:left-1/2
-        max-lg:h-[150px] max-lg:top-1/2 max-lg:-translate-x-1/2 
-        max-lg:-translate-y-1/2 max-lg:animate-pulse max-lg:blur-2xl relative flexcenter"
-      >
+      <div className="lg:w-[40%] lg:min-h-screen relative flexcenter">
         <Image
           alt="auth bg"
-          className=" object-cover  z-0"
+          className="object-cover dark:hidden  z-0"
           fill
           src={"/assets/auth-bg.svg"}
-        />
+        />{" "}
+        <Image
+          alt="auth bg"
+          className="object-cover hidden dark:flex  z-0"
+          fill
+          src={"/assets/auth-bg-dark.svg"}
+        />{" "}
         <AnimatedLogo className="h-[100px] relative z-10 max-lg:hidden  stroke-white w-[100px]" />
       </div>
     </div>

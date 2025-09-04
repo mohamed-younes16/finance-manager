@@ -33,7 +33,7 @@ const profile = new Hono()
   .get("/", async (c) => {
 
     const user = await getCurrentUser();
-    console.log(user);
+
     return c.json({ user }, { status: 200 });
   });
 
