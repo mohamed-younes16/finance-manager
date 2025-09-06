@@ -54,13 +54,20 @@ const RegisterForm = ({ type }: { type: "login" | "register" }) => {
   } = form;
 
   useEffect(() => {
-    const dirty = Object.keys(form.formState.dirtyFields).length;
-    const invalid = Object.keys(form.formState.errors).length;
+    const values = form.watch();
+    let validCount = 0;
 
-    const clearedCount = dirty - invalid;
-    const percentage = (clearedCount / filedsNumber) * 100;
+    for (const key of Object.keys(values)) {
+      const value = values[key];
+      const hasError = !!form.formState.errors[key];
 
-    setCleared(percentage > 0 ? percentage : 0);
+      if (value !== "" && !hasError) {
+        validCount++;
+      }
+    }
+
+    const percentage = (validCount / filedsNumber) * 100;
+    setCleared(percentage);
   }, [form.formState]);
   async function onSubmit(
     values: z.infer<typeof RegisterSchema> | z.infer<typeof Loginschema>
@@ -117,14 +124,14 @@ const RegisterForm = ({ type }: { type: "login" | "register" }) => {
                 cleared == 100
                   ? "!bg-green-500"
                   : cleared == 25
-                  ? "!bg-yellow-500"
-                  : cleared >= 50
                   ? "!bg-orange-500"
+                  : cleared >= 50
+                  ? "!bg-yellow-500"
                   : ""
               }`}
             ></div>
           </div>
-          <div className=" gap-3 space-y-4 mb-10 items-center w-full ">
+          <div className=" gap-3 space-y-4 mb-4 items-center w-full ">
             {type === "register" && (
               <FormField
                 control={form.control}
@@ -227,7 +234,7 @@ const RegisterForm = ({ type }: { type: "login" | "register" }) => {
           }
         </form>
       </Form>
-      <div className="space-y-6 max-lg:space-y-4 max-lg:mt-6 mt-10">
+      <div className="space-y-4 mt-4 ">
         <LoginButton
           onClick={async () => {
             signIn("google");

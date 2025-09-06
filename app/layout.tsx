@@ -4,10 +4,11 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import NavBar from "@/components/navbar/NavBar";
 import getCurrentUser from "@/actions";
-import { UserLoader } from "@/hooks/store";
 import { QueryProvider } from "@/providers/query";
 import { Inter } from "next/font/google";
-import { SessionProvider } from "next-auth/react";
+import { UserFetched } from "..";
+import ProgressBar from "@/components/navbar/ProgressBar";
+import { UserLoader } from "@/hooks/store";
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -35,10 +36,7 @@ export default async function RootLayout({
           storageKey="admin-theme"
         >
           <QueryProvider>
-
-            
-              {user && <NavBar userData={user} />}
-        
+            <ProgressBar />
             <UserLoader userData={user} />
             <Toaster richColors position="top-center" />
 

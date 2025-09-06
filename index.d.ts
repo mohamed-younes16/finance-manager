@@ -3,10 +3,11 @@ type DateTime = string;
 interface UserFetched {
   id: string;
   name: string | null;
-  email: string ;
+  email: string;
   username: string | null;
   imageUrl: string | null;
   bio: string | null;
+  customerId: string | null;
   onboarded: boolean;
 }
 

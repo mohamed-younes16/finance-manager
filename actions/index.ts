@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOpts } from "@/app/api/auth/[...nextauth]/route";
 import prismadb from "@/lib/prismabd";
+import { UserFetched } from "..";
 
 export const getSession = async () => await getServerSession(authOpts);
 
@@ -27,7 +28,7 @@ export default async function getCurrentUser() {
         customerId: true,
       },
     });
-    return user;
+    return user as UserFetched;
   } catch (error: any) {
     return null;
   }

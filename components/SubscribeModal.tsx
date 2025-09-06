@@ -18,18 +18,18 @@ import { Separator } from "./ui/separator";
 import { usePolarCheckout } from "@/hooks/polar-hooks";
 import { useStore } from "@/hooks/store";
 import { useTheme } from "next-themes";
-import { usechargilyCheckout } from "@/hooks/chargily-hooks";
+// import { usechargilyCheckout } from "@/hooks/chargily-hooks";
 const SubscribeModal = () => {
   const { user } = useStore();
   const features = ["Upload CSV files", "Diffrent Chart types"];
   const { theme } = useTheme();
-  // const {
-  //   data: data,
-  //   isLoading,
-  //   isSuccess,
-  // } = usePolarCheckout(user!, theme as "light" | "dark");
+  const {
+    data,
+    isLoading,
+    isSuccess,
+  } = usePolarCheckout(user!, theme as "light" | "dark");
 
-  const { data, isSuccess, isLoading } = usechargilyCheckout(user);
+  // const { data, isSuccess, isLoading } = usechargilyCheckout(user);
   
   const Onclick = async () => {
     if (isSuccess && data && data.checkoutURL)

@@ -8,11 +8,11 @@ import MainNav from "../sheets/MainNav";
 import { Button } from "../ui/button";
 import { ModeToggle } from "../ui/themeButton";
 import { Suspense } from "react";
-import { SessionProvider } from "next-auth/react";
+import { useStore } from "@/hooks/store";
 
-const NavBar = ({ userData }: { userData: UserFetched | null }) => {
+const NavBar = () => {
   const matches = useMediaQuery("(min-width:1024px)") || false;
-
+  const { user: userData } = useStore();
   return (
     <div
       className="z-50 px-16 max-lg:px-4 lg:top-0 overflow-y-visible max-lg:bottom-0 !fixed py-3
@@ -36,9 +36,7 @@ const NavBar = ({ userData }: { userData: UserFetched | null }) => {
         </Link>{" "}
         {matches && (
           <div className="max-lg:hidden">
-            <SessionProvider>
-              <Links />{" "}
-            </SessionProvider>
+            <Links />{" "}
           </div>
         )}
         <div

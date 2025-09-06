@@ -35,6 +35,7 @@ const transactions = new Hono()
       })
     ),
     async (c) => {
+      console.log("ddd", process.env);
       try {
         const user = await getCurrentUser();
         if (!user) {
@@ -210,7 +211,7 @@ const transactions = new Hono()
         existingCategories.map((cat) => [cat.name, cat.id])
       );
 
-  for (const el of values) {
+      for (const el of values) {
         const { category } = el;
 
         if (category && !categoryMap.has(category)) {

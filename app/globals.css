@@ -172,3 +172,13 @@ html {
     @apply bg-background text-foreground;
   }
 }
+#nprogress .bar {
+  background: var(--color-main) !important;
+  height: 2px !important;
+  border-radius: 10px;
+  box-shadow: 5px 0px 8px 2px var(--foreground);
+}
+
+/* #nprogress .peg {
+  background: var(--color-main) !important;
+} */

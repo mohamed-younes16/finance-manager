@@ -46,7 +46,7 @@ export const chargily = new Hono()
     }
   )
   .post("/webhooks", async (c) => {
-    console.log(c.req.raw);
+
     const buffer = Buffer.from(await c.req.raw.arrayBuffer());
     const Signature = c.req.raw.headers.get("signature") || "";
 
@@ -78,19 +78,5 @@ export const chargily = new Hono()
     console.log(user);
     return c.json({ pay: user });
   })
-  .get("/portal", async (c) => {
-    const req = await CustomerPortal({
-      accessToken: process.env.POLAR_ACCESS_TOKEN!,
-      server: "sandbox",
-      getCustomerId: async (event) => {
-        const user = await getCurrentUser();
-
-        if (user && user.customerId) return user.customerId;
-        else return "";
-      },
-    })(c);
-    const url: string | null = req.headers.get("Location") || null;
-    return c.json({ url });
-  });
 
 export default chargily;

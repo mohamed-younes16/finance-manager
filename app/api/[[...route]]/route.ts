@@ -38,7 +38,19 @@ app.use("/*", async (c, next) => {
 app.notFound((c) => {
   return c.json({ page: "wrong" });
 });
-// app.onError((c) => {return c.message});
+
+app.onError((err, c) => {
+  console.error("API Error:", err);
+
+  return c.json(
+    {
+      success: false,
+      message: err.message || "Internal Server Error",
+    },
+    500
+  );
+});
+
 const routes = app
   .route("/register", register)
   .route("/profile", profile)

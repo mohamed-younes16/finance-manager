@@ -24,12 +24,12 @@ export default async function Home() {
           transition-all  relative z-10 max-lg:w-full  flexcenter"
       >
         <div
-          className="w-full  backdrop-blur-[3px] border-[1px] px-4
-  bg-accent/40 dark:bg-accent/60  py-12 flex max-h-fit flex-col max-w-lg max-lg:max-w-md max-lg:py-6 lg:min-h-[90dvh] shadow-xl  rounded-xl max-lg:border-background/70"
+          className="w-full transition-all backdrop-blur-[3px] border-[1px] px-4
+  max-lg:bg-accent/40 bg-accent dark:bg-accent/60  py-12 flex max-h-fit flex-col max-w-lg max-lg:max-w-md max-lg:py-6  shadow-xl  rounded-xl border-border"
         >
           <AuthComponent />{" "}
           <div className="   w-full">
-            <Separator className=" mt-auto my-3" />
+            <Separator className=" mt-auto my-6" />
             <MenuItem className="bg-background  mx-auto w-fit border-foreground shadow-xl">
               <div className="flex gap-2 items-center">
                 <ModeToggle>

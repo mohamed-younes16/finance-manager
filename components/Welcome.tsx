@@ -4,6 +4,7 @@ import { useAddAccount } from "@/hooks/accounts-hooks";
 import { useStore } from "@/hooks/store";
 import { motion as m } from "framer-motion";
 import { Loader2 } from "lucide-react";
+import { Skeleton } from "./ui/skeleton";
 const Welcome = () => {
   const { user } = useStore();
 
@@ -15,12 +16,14 @@ const Welcome = () => {
       >
         {user?.name ? (
           <>
-            <p className=" mr-3 tracking-[.25rem] max-lg:tracking-tight ">Welcome Back ! </p>
+            <p className=" mr-3 tracking-[.25rem] max-lg:tracking-tight ">
+              Welcome Back !{" "}
+            </p>
             <div className=" flex gap-1 max-lg:gap-[1px] items-center ">
               {" "}
               {user?.name.split("").map((e, i) => (
                 <m.p
-                key={i}
+                  key={i}
                   viewport={{ once: true }}
                   whileInView={{ opacity: 1, y: 0, x: 0 }}
                   transition={{
@@ -40,7 +43,7 @@ const Welcome = () => {
             </div>
           </>
         ) : (
-          <Loader2 className="h-10 w-10 animate-spin " />
+          <Skeleton className="w-full h-8" />
         )}
       </div>
 

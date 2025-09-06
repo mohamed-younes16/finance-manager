@@ -69,7 +69,7 @@ const Filter = () => {
     router.push(url as any, { scroll: false });
   };
   useEffect(() => {
-    console.log("here");
+
     if (fromState && toState && !(from && to)) {
       setDate({ from: fromState, to: toState });
       handleFilterChange({

@@ -40,7 +40,7 @@ export const polar = new Hono()
   .post("/webhooks", async (c) => {
     const res = await Webhooks({
       webhookSecret: process.env.POLAR_WEBHOOK_SECRET!,
-      onSubscriptionActive: async (sub: PolarSubscriptionActivePayload) => {
+      onSubscriptionActive: async (sub) => {
         const {
           id: subscriptionId,
           metadata: { userId },
@@ -50,7 +50,7 @@ export const polar = new Hono()
         } = sub.data;
 
         await prismadb.user.update({
-          where: { id: userId },
+          where: { id: userId as string },
           data: {
             subscriptionId,
             currentPeriodEnd,

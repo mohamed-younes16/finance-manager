@@ -32,6 +32,7 @@ export const transactionSchema = z.object({
     .min(1),
   categoryId: z.string(),
 });
+
 export const Loginschema = z.object({
   email: z.email(),
   password: z

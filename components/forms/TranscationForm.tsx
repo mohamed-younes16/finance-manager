@@ -119,7 +119,7 @@ const TransactionForm = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="createdAt"
