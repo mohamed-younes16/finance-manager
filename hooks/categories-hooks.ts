@@ -102,7 +102,7 @@ export const useAddCategory = () => {
   return query;
 };
 
-// Delete a category
+
 type RequestCategoryDeleteType = InferRequestType<
   (typeof client.api.categories)["delete"]["$post"]
 >["json"];
