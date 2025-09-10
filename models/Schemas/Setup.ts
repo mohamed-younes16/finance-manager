@@ -1,4 +1,5 @@
-import * as z from "zod";
+import { z } from "zod";
+import type { infer as zInfer } from "zod";
 
 export const RegisterSchema = z
   .object({
@@ -6,7 +7,7 @@ export const RegisterSchema = z
       .string()
       .min(4, { message: "must be at least 4 characters long" })
       .max(16),
-    email: z.string().min(4).email(),
+    email: z.email(),
     password: z
       .string()
       .min(4, { message: "must be at least 8 characters long" })
@@ -24,7 +25,7 @@ export const RegisterSchema = z
 export const transactionSchema = z.object({
   amount: z.number({ error: () => ({ message: "Amount is required" }) }),
   payee: z.string({ error: () => ({ message: "Payee is required" }) }).min(1),
-  notes: z.string().optional(),
+  notes: z.string(),
   createdAt: z.string(),
   category: z.string(),
   accountId: z
@@ -41,10 +42,10 @@ export const Loginschema = z.object({
     .max(24),
 });
 export const ProfileSchema = z.object({
-  name: z.string().min(1).default(""),
-  username: z.string().min(1).default(""),
-  bio: z.string().min(1).default(""),
-  imageUrl: z.string().min(1).default(""),
+  name: z.string(),
+  username: z.string(),
+  bio: z.string(),
+  imageUrl: z.string(),
 });
 export const AccountSchema = z.object({
   name: z.string().max(15),
@@ -52,3 +53,22 @@ export const AccountSchema = z.object({
 export const CategorySchema = z.object({
   name: z.string().max(15),
 });
+
+export const UserFetchedSchema = z.object({
+  id: z.string(),
+  name: z.string().nullable(),
+  email: z.string(),
+  username: z.string().nullable(),
+  imageUrl: z.string().nullable(),
+  bio: z.string().nullable(),
+  customerId: z.string().nullable(),
+  onboarded: z.boolean(),
+});
+
+export type UserFetched = zInfer<typeof UserFetchedSchema>;
+export type transactionSchemaType = zInfer<typeof transactionSchema>;
+export type RegisterSchemaType = zInfer<typeof RegisterSchema>;
+export type LoginschemaType = zInfer<typeof Loginschema>;
+export type ProfileSchemaType = zInfer<typeof ProfileSchema>;
+export type AccountSchemaType = zInfer<typeof AccountSchema>;
+export type CategorySchemaType = zInfer<typeof CategorySchema>;

@@ -1,8 +1,6 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -13,28 +11,32 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
-import { CalendarIcon, Trash2Icon } from "lucide-react";
-import { useEffect, useState } from "react";
 import {
   useAddTransaction,
   useDeleteTransaction,
   usePatchTransaction,
 } from "@/hooks/transcation-hooks";
+import { CalendarIcon, Trash2Icon } from "lucide-react";
+import { useEffect, useState } from "react";
 
-import { Textarea } from "../ui/textarea";
 import { useGetAccounts } from "@/hooks/accounts-hooks";
 import { useGetCategories } from "@/hooks/categories-hooks";
+import { cn } from "@/lib/utils";
+import {
+  transactionSchema,
+  transactionSchemaType,
+} from "@/models/Schemas/Setup";
+import { toMilliunits } from "@/utils";
+import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 import CheckRefrence from "../inputs/CheckRefrence";
 import AmountInput from "../inputs/Counter";
-import { transactionSchema } from "@/models/Schemas/Setup";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
 import { Calendar } from "../ui/calendar";
-import { toMilliunits } from "@/utils";
-import { useRouter } from "next/navigation";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Textarea } from "../ui/textarea";
 
 const TransactionForm = ({
   OnDone,
@@ -42,7 +44,7 @@ const TransactionForm = ({
   id,
 }: {
   OnDone: () => void;
-  defaultValues: z.infer<typeof transactionSchema> | null;
+  defaultValues: transactionSchemaType | null;
   id?: string;
 }) => {
   const { refresh } = useRouter();
@@ -73,7 +75,7 @@ const TransactionForm = ({
       : "positive"
   );
 
-  const form = useForm<z.infer<typeof transactionSchema>>({
+  const form = useForm<transactionSchemaType>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
       ...defaultValues,
@@ -81,14 +83,21 @@ const TransactionForm = ({
         (defaultValues && defaultValues?.accountId) ||
         (accounts && accounts[0]?.id) ||
         "",
-      categoryId: defaultValues?.categoryId ?? categories?.[0]?.id ?? "",
+      categoryId:
+        (defaultValues && defaultValues?.categoryId) ||
+        (categories && categories[0]?.id) ||
+        "",
+      category:
+        (defaultValues && defaultValues?.category) ||
+        (categories && categories[0]?.name) ||
+        "",
       notes: "",
     },
   });
 
   const { handleSubmit, control, formState, watch, setValue } = form;
 
-  async function onSubmit(values: z.infer<typeof transactionSchema>) {
+  async function onSubmit(values: transactionSchemaType) {
     try {
       const absAmount = Math.abs(values.amount);
       const amount = choice === "negative" ? absAmount * -1 : absAmount;
@@ -97,7 +106,7 @@ const TransactionForm = ({
         amount: toMilliunits(amount),
       };
 
-      id ? patchHandler({ id, ...data }) : addHandler([{ ...data }]);
+      id ? patchHandler({ id, ...data }) : addHandler(data);
       refresh();
     } catch (error) {
       console.log(error);
@@ -106,16 +115,13 @@ const TransactionForm = ({
 
   const handleDelete = () => {
     deleteHandler({
-      Ids: [id as string],
+      ids: [id as string],
     });
     OnDone();
   };
   useEffect(() => {
     isSuccess && OnDone();
   }, [isSuccess]);
-  useEffect(() => {
-    console.log(form.watch());
-  }, [form.watch()]);
 
   return (
     <Form {...form}>
@@ -273,7 +279,7 @@ const TransactionForm = ({
 
         <Button
           type="submit"
-          disabled={isPending || !formState.isValid}
+          disabled={isPending || !formState.isValid || !formState.isDirty}
           className={`${
             isPending && "opacity-50"
           } bg-minor flexcenter w-full gap-2`}

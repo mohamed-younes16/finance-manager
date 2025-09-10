@@ -1,321 +1,464 @@
-import { Hono } from "hono";
-import { zValidator } from "@hono/zod-validator";
-import prismadb from "@/lib/prismabd";
 import getCurrentUser from "@/actions";
-import * as z from "zod";
-import { parse, subDays } from "date-fns";
+import prismadb from "@/lib/prismabd";
 import { transactionSchema } from "@/models/Schemas/Setup";
-type CategoryRef = {
-  categoryRef?: {
-    connect?: { id: string; ownerId: string };
-    create?: { name: string; ownerId: string };
-  };
-};
-type TransactionData = {
-  accountRef: { connect: { id: string; ownerId: string } };
-  amount: number;
-  payee: string;
-  notes: string | null;
-  categoryRef?: {
-    connect?: { id: string; ownerId: string };
-    create?: { name: string; ownerId: string };
-  };
-  createdAt?: string;
-};
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
+import { parse, subDays } from "date-fns";
+import * as z from "zod";
 
-const transactions = new Hono()
-  .get(
-    "/",
-    zValidator(
-      "query",
-      z.object({
-        from: z.string().optional(),
-        to: z.string().optional(),
-        accountId: z.string().optional(),
-      })
-    ),
-    async (c) => {
-      console.log("ddd", process.env);
-      try {
-        const user = await getCurrentUser();
-        if (!user) {
-          return c.json({ message: "Unauthorized _______________" }, 401);
-        }
-        const { from, to, accountId } = c.req.valid("query");
-        const accountRef = !!accountId
-          ? { ownerId: user.id, id: accountId }
-          : { ownerId: user.id };
-        const defTo = new Date();
-        const defFrom = subDays(new Date(), 30);
-        const start = from ? parse(from, "yyyy-MM-dd", new Date()) : defFrom;
-        const end = to ? parse(to, "yyyy-MM-dd", new Date()) : defTo;
+const getTransactionsRoute = createRoute({
+  method: "get",
+  path: "",
+  request: {
+    query: z.object({
+      from: z.string().optional(),
+      to: z.string().optional(),
+      accountId: z.string().optional(),
+    }),
+  },
+  responses: {
+    200: {
+      description: "List of transactions",
+      content: {
+        "application/json": {
+          schema: z.object({
+            transactions: z.array(
+              z.object({
+                id: z.string(),
+                createdAt: z.string(),
+                amount: z.number(),
+                notes: z.string().nullable(),
+                payee: z.string(),
+                categoryRef: z
+                  .object({
+                    id: z.string(),
+                    name: z.string(),
+                  })
+                  .nullable(),
+                accountRef: z.object({
+                  id: z.string(),
+                  name: z.string(),
+                }),
+              })
+            ),
+          }),
+        },
+      },
+    },
+    401: {
+      description: "Unauthorized",
+      content: {
+        "application/json": {
+          schema: z.object({ message: z.string() }),
+        },
+      },
+    },
+    500: {
+      description: "Server error",
+      content: {
+        "application/json": {
+          schema: z.object({ message: z.string() }),
+        },
+      },
+    },
+  },
+});
 
-        const transactions = await prismadb.transaction.findMany({
-          where: {
-            accountRef,
-            createdAt: {
-              gte: start,
-              lte: end,
-            },
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
-          select: {
-            createdAt: true,
-            id: true,
-            categoryRef: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-            accountRef: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-            amount: true,
-            notes: true,
-            payee: true,
-          },
-        });
+const getTransactionByIdRoute = createRoute({
+  method: "get",
+  path: ":id",
+  request: {
+    params: z.object({ id: z.string() }),
+  },
+  responses: {
+    200: {
+      description: "Transaction details",
+      content: {
+        "application/json": {
+          schema: z.object({
+            transaction: z
+              .object({
+                id: z.string(),
+                createdAt: z.string(),
+                amount: z.number(),
+                notes: z.string().nullable(),
+                payee: z.string(),
+                categoryRef: z
+                  .object({
+                    id: z.string(),
+                    name: z.string(),
+                  })
+                  .nullable(),
+                accountRef: z.object({
+                  id: z.string(),
+                  name: z.string(),
+                }),
+              })
+              .nullable(),
+          }),
+        },
+      },
+    },
+    401: {
+      description: "Unauthorized",
+      content: {
+        "application/json": {
+          schema: z.object({ message: z.string() }),
+        },
+      },
+    },
+    500: {
+      description: "Server error",
+      content: {
+        "application/json": {
+          schema: z.object({ message: z.string() }),
+        },
+      },
+    },
+  },
+});
 
-        return c.json({ transactions }, 200);
-      } catch (error) {
-        console.log(
-          error,
-          "##########finance transactions get ###############"
-        );
-        return c.json({ error: "error in server" }, 500);
-      }
-    }
-  )
-  .get(
-    "/:id",
-    zValidator("param", z.object({ id: z.string() })),
+const createTransactionRoute = createRoute({
+  method: "post",
+  path: "",
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: transactionSchema,
+        },
+      },
+      required: true,
+    },
+  },
+  responses: {
+    201: {
+      description: "Transaction created",
+      content: {
+        "application/json": {
+          schema: z.object({
+            message: z.string(),
+          }),
+        },
+      },
+    },
+    500: {
+      description: "Server error",
+      content: {
+        "application/json": {
+          schema: z.object({ message: z.string() }),
+        },
+      },
+    },
+  },
+});
 
-    async (c) => {
-      try {
-        const user = await getCurrentUser();
-        const { id } = c.req.valid("param");
-        if (!id) {
-          return c.json({ message: "Missing required fields: Id" }, 401);
-        }
-        const transaction = await prismadb.transaction.findFirst({
-          where: { id, accountRef: { ownerId: user?.id } },
-          select: {
-            createdAt: true,
-            id: true,
-            categoryRef: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-            accountRef: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-            amount: true,
-            notes: true,
-            payee: true,
-          },
-        });
+const patchTransactionRoute = createRoute({
+  method: "post",
+  path: "/patch",
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: z.intersection(
+            transactionSchema,
+            z.object({ id: z.string() })
+          ),
+        },
+      },
+      required: true,
+    },
+  },
+  responses: {
+    200: {
+      description: "Transaction updated",
+      content: {
+        "application/json": {
+          schema: z.object({
+            message: z.string(),
+          }),
+        },
+      },
+    },
+    500: {
+      description: "Server error",
+      content: {
+        "application/json": {
+          schema: z.object({ message: z.string() }),
+        },
+      },
+    },
+    401: {
+      description: "Unauthorized",
+      content: {
+        "application/json": {
+          schema: z.object({ message: z.string() }),
+        },
+      },
+    },
+  },
+});
 
-        return c.json({ transaction }, 200);
-      } catch (error) {
-        console.log(error, "##########finance transaction get ###############");
-        return c.json({ error: "error in server" }, 500);
-      }
-    }
-  )
-  .post(
-    "/patch",
-    zValidator(
-      "json",
-      z.intersection(transactionSchema, z.object({ id: z.string() }))
-    ),
+const deleteTransactionsRoute = createRoute({
+  method: "post",
+  path: "delete",
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: z.object({
+            ids: z.array(z.string()),
+          }),
+        },
+      },
+      required: true,
+    },
+  },
+  responses: {
+    201: {
+      description: "Transactions deleted",
+      content: {
+        "application/json": {
+          schema: z.object({
+            message: z.string(),
+          }),
+        },
+      },
+    },
+    500: {
+      description: "Server error",
+      content: {
+        "application/json": {
+          schema: z.object({ message: z.string() }),
+        },
+      },
+    },
+  },
+});
 
-    async (c) => {
-      try {
-        const user = await getCurrentUser();
-        const values = c.req.valid("json");
-        const {
-          accountId,
-          amount,
-          categoryId,
-          notes,
-          payee,
-          id,
-          createdAt,
-          category,
-        } = values;
-        if (!values) {
-          return c.json({ message: "Missing required fields" }, 401);
-        }
-        if (!user) {
-          return c.json({ message: "Unauthorized _______________" }, 401);
-        }
-
-        const categoryRef = categoryId
-          ? {
-              categoryRef: { connect: { id: categoryId, ownerId: user?.id } },
-            }
-          : category
-          ? {
-              categoryRef: { create: { name: category, ownerId: user?.id } },
-            }
-          : {};
-
-        await prismadb.transaction.update({
-          where: { id, accountRef: { ownerId: user.id } },
-          data: {
-            accountRef: { connect: { id: accountId, ownerId: user?.id } },
-            amount,
-            payee,
-            createdAt: createdAt!,
-            notes,
-            ...categoryRef,
-          },
-        });
-
-        return c.json({ message: "patched with success" }, 200);
-      } catch (error) {
-        console.log(error, "##########finance transaction get ###############");
-        return c.json({ message: "error in server" }, 500);
-      }
-    }
-  )
-  .post("/", zValidator("json", transactionSchema.array()), async (c) => {
-    const values = c.req.valid("json");
-
-    if (!values) {
-      return c.json({ message: "Missing required fields" }, { status: 400 });
-    }
-
+const transactions = new OpenAPIHono()
+  .openapi(getTransactionsRoute, async (c) => {
     try {
       const user = await getCurrentUser();
       if (!user) {
-        return c.json({ message: "Unauthorized _______________" }, 401);
+        return c.json({ message: "Unauthorized" }, 401);
       }
 
-      const existingCategories = await prismadb.category.findMany({
-        where: { ownerId: user.id },
+      const { from, to, accountId } = c.req.valid("query");
+      const accountRef = accountId
+        ? { ownerId: user.id, id: accountId }
+        : { ownerId: user.id };
+      const defTo = new Date();
+      const defFrom = subDays(new Date(), 30);
+      const start = from ? parse(from, "yyyy-MM-dd", new Date()) : defFrom;
+      const end = to ? parse(to, "yyyy-MM-dd", new Date()) : defTo;
+
+      const transactions = await prismadb.transaction.findMany({
+        where: {
+          accountRef,
+          createdAt: {
+            gte: start,
+            lte: end,
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          createdAt: true,
+          id: true,
+          categoryRef: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          accountRef: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          amount: true,
+          notes: true,
+          payee: true,
+        },
       });
 
-      const categoryMap = new Map(
-        existingCategories.map((cat) => [cat.name, cat.id])
-      );
-
-      for (const el of values) {
-        const { category } = el;
-
-        if (category && !categoryMap.has(category)) {
-          // Create the category if it doesn't exist
-          const newCategory = await prismadb.category.create({
-            data: { name: category, ownerId: user.id },
-          });
-          categoryMap.set(category, newCategory.id);
-        }
+      return c.json({ transactions }, 200);
+    } catch (error) {
+      console.error(error);
+      return c.json({ message: "Server error" }, 500);
+    }
+  })
+  .openapi(getTransactionByIdRoute, async (c) => {
+    try {
+      const user = await getCurrentUser();
+      const { id } = c.req.valid("param");
+      if (!user) {
+        return c.json({ message: "Unauthorized" }, 401);
       }
 
-      // Process transaction data using categoryMap
-      const filteredData = values.map((el) => {
-        const {
-          accountId,
-          amount,
-          categoryId,
-          notes,
-          payee,
-          category,
-          createdAt,
-        } = el;
-        let categoryRef: CategoryRef = {};
-
-        if (categoryId) {
-          categoryRef = {
-            categoryRef: { connect: { id: categoryId, ownerId: user.id } },
-          };
-        } else if (category) {
-          // Use the category from categoryMap
-          categoryRef = {
-            categoryRef: {
-              connect: { id: categoryMap.get(category)!, ownerId: user.id },
+      const transaction = await prismadb.transaction.findFirst({
+        where: { id, accountRef: { ownerId: user.id } },
+        select: {
+          createdAt: true,
+          id: true,
+          categoryRef: {
+            select: {
+              id: true,
+              name: true,
             },
-          };
+          },
+          accountRef: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          amount: true,
+          notes: true,
+          payee: true,
+        },
+      });
+
+      return c.json({ transaction }, 200);
+    } catch (error) {
+      console.error(error);
+      return c.json({ message: "Server error" }, 500);
+    }
+  })
+  .openapi(createTransactionRoute, async (c) => {
+    try {
+      const user = (await getCurrentUser())!;
+
+      const values = c.req.valid("json");
+      const {
+        accountId,
+        amount,
+        categoryId,
+        notes,
+        payee,
+        category,
+        createdAt,
+      } = values;
+
+      let categoryRef = {};
+      if (categoryId) {
+        categoryRef = {
+          categoryRef: { connect: { id: categoryId, ownerId: user.id } },
+        };
+      } else if (category) {
+        let categoryRecord = await prismadb.category.findFirst({
+          where: { name: category, ownerId: user.id },
+        });
+
+        if (!categoryRecord) {
+          categoryRecord = await prismadb.category.create({
+            data: { name: category, ownerId: user.id },
+          });
         }
 
-        let obj: TransactionData = {
+        categoryRef = {
+          categoryRef: { connect: { id: categoryRecord.id, ownerId: user.id } },
+        };
+      }
+
+      await prismadb.transaction.create({
+        data: {
           accountRef: { connect: { id: accountId, ownerId: user.id } },
           amount,
           payee,
-          notes,
+          notes: notes || null,
+          createdAt: createdAt || undefined,
           ...categoryRef,
-        };
-
-        if (createdAt) {
-          obj.createdAt = createdAt;
-        }
-
-        return obj;
+        },
+        include: { categoryRef: true },
       });
-      for (const e of filteredData) {
-        await prismadb.transaction.create({
-          data: e,
-          include: { categoryRef: true },
-        });
-      }
 
-      return c.json(
-        { message: "Your new finance transactions are ready" },
-        200
-      );
+      return c.json({ message: "Transaction created successfully" }, 201);
     } catch (error) {
-      console.log(
-        error,
-        "##########finance transaction create ###############"
-      );
-      return c.json({ message: "Error in server" }, 500);
+      console.error(error);
+      return c.json({ message: "Server error" }, 500);
     }
   })
-  .post(
-    "/delete",
-    zValidator(
-      "json",
-      z.object({
-        Ids: z.array(z.string()),
-      })
-    ),
-    async (c) => {
-      const { Ids } = c.req.valid("json");
-      if (!(Ids.length > 0)) {
-        return c.json({ message: "Missing required fields: Ids" }, 400);
+  .openapi(patchTransactionRoute, async (c) => {
+    try {
+      const user = await getCurrentUser();
+      if (!user) {
+        return c.json({ message: "Unauthorized" }, 401);
       }
-      try {
-        const user = await getCurrentUser();
-        !!user &&
-          (await prismadb.transaction.deleteMany({
-            where: { id: { in: Ids }, accountRef: { ownerId: user.id } },
-          }));
 
-        return c.json(
-          {
-            message: `${Ids.length} of selected finance transactions has been deleted successfully`,
-          },
-          { status: 201 }
-        );
-      } catch (error) {
-        console.log(
-          error,
-          "##########Finance transaction Delete ###############"
-        );
-        return c.json({ message: "error in server while deleteing" }, 500);
+      const updateData = c.req.valid("json");
+
+      const {
+        accountId,
+        amount,
+        categoryId,
+        notes,
+        payee,
+        category,
+        id,
+        createdAt,
+      } = updateData;
+
+      let categoryRef = {};
+      if (categoryId) {
+        categoryRef = {
+          categoryRef: { connect: { id: categoryId, ownerId: user.id } },
+        };
+      } else if (category) {
+        let categoryRecord = await prismadb.category.findFirst({
+          where: { name: category, ownerId: user.id },
+        });
+
+        if (!categoryRecord) {
+          categoryRecord = await prismadb.category.create({
+            data: { name: category, ownerId: user.id },
+          });
+        }
+
+        categoryRef = {
+          categoryRef: { connect: { id: categoryRecord.id, ownerId: user.id } },
+        };
       }
+
+      await prismadb.transaction.update({
+        where: { id, accountRef: { ownerId: user.id } },
+        data: {
+          ...(accountId && {
+            accountRef: { connect: { id: accountId, ownerId: user.id } },
+          }),
+          ...(amount !== undefined && { amount }),
+          ...(payee && { payee }),
+          ...(notes !== undefined && { notes }),
+          ...categoryRef,
+          createdAt,
+        },
+      });
+
+      return c.json({ message: "Transaction updated successfully" }, 200);
+    } catch (error) {
+      console.error(error);
+      return c.json({ message: "Error updating transaction" }, 500);
     }
-  );
+  })
+  .openapi(deleteTransactionsRoute, async (c) => {
+    try {
+      const user = (await getCurrentUser())!;
+
+      const { ids } = c.req.valid("json");
+      await prismadb.transaction.deleteMany({
+        where: { id: { in: ids }, accountRef: { ownerId: user.id } },
+      });
+
+      return c.json(
+        { message: `${ids.length} transactions deleted successfully` },
+        201
+      );
+    } catch (error) {
+      console.error(error);
+      return c.json({ message: "Server error" }, 500);
+    }
+  });
 
 export default transactions;

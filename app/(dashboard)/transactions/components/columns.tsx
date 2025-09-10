@@ -5,10 +5,10 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import CellAction from "./CellAction";
 import { Checkbox } from "@/components/ui/checkbox";
-import { client } from "@/lib/hono";
-import { InferResponseType } from "hono";
+
 import { Badge } from "@/components/ui/badge";
 import { formatDateString, formatedPrice } from "@/utils";
+import { ResponseTransactionsGetType } from "../page";
 
 export type TransactionResponseGetType = {
   id: string;
@@ -20,7 +20,7 @@ export type TransactionResponseGetType = {
   payee: string;
 };
 
-export const columns: ColumnDef<TransactionResponseGetType>[] = [
+export const columns: ColumnDef<ResponseTransactionsGetType>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -58,7 +58,7 @@ export const columns: ColumnDef<TransactionResponseGetType>[] = [
       );
     },
     cell: ({ row }) => (
-      <p className="whitespace-nowrap px-4 ">{row.original?.accountRef}</p>
+      <p className="whitespace-nowrap px-4 ">{row.original?.accountRef.name}</p>
     ),
   },
   {
@@ -75,7 +75,9 @@ export const columns: ColumnDef<TransactionResponseGetType>[] = [
       );
     },
     cell: ({ row }) => (
-      <p className="whitespace-nowrap px-4 ">{row.original?.categoryRef}</p>
+      <p className="whitespace-nowrap px-4 ">
+        {row.original?.categoryRef?.name}
+      </p>
     ),
   },
   {

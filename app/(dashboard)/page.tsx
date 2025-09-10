@@ -6,10 +6,9 @@ export default async function DashboardPage() {
   return (
     <div className=" space-y-8  w-full mx-auto pb-10 ">
       <Suspense>
-
         <DataGrid />
         <DataCharts />
-      </Suspense>{" "}
+      </Suspense>
     </div>
   );
 }

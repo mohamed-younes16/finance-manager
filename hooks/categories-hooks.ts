@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { client } from "@/lib/hono";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { InferRequestType, InferResponseType } from "hono";
@@ -20,7 +20,6 @@ export const useGetCategories = () => {
   return query;
 };
 
-// Get a single category by ID
 export const useGetCategory = (id: string) => {
   const query = useQuery({
     enabled: !!id,
@@ -37,7 +36,6 @@ export const useGetCategory = (id: string) => {
   return query;
 };
 
-// Patch (update) a category
 type RequestCategoryPatchType = InferRequestType<
   (typeof client.api.categories)["patch"]["$post"]
 >["json"];
@@ -53,7 +51,7 @@ export const usePatchCategory = () => {
     RequestCategoryPatchType
   >({
     mutationFn: async (json) => {
-      const res = await client.api.categories["patch"].$post({ json });
+      const res = await client.api.categories.patch["$post"]({ json });
       if (!res.ok) throw new Error((await res.json()).message);
 
       const { message } = await res.json();
@@ -63,8 +61,7 @@ export const usePatchCategory = () => {
     onSuccess: (result) => {
       toast.success(result.message);
       queryClient.invalidateQueries({ queryKey: ["categories"] });
-      queryClient.invalidateQueries({ queryKey: ["transactions",] });
-
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
     },
     onError: (err) => {
       toast.error(err.message);
@@ -96,8 +93,7 @@ export const useAddCategory = () => {
     onSuccess: (result) => {
       toast.success(result.message);
       queryClient.invalidateQueries({ queryKey: ["categories"] });
-      queryClient.invalidateQueries({ queryKey: ["transactions",] });
-
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
     },
     onError: (err) => {
       toast.error(err.message);
@@ -122,7 +118,7 @@ export const useDeleteCategory = () => {
     RequestCategoryDeleteType
   >({
     mutationFn: async (json) => {
-      const res = await client.api.categories["delete"].$post({ json });
+      const res = await client.api.categories.delete.$post({ json });
       if (!res.ok) throw new Error((await res.json()).message);
       const result = await res.json();
       return result;
@@ -130,7 +126,7 @@ export const useDeleteCategory = () => {
     onSuccess: (result) => {
       toast.success(result.message);
       queryClient.invalidateQueries({ queryKey: ["categories"] });
-      queryClient.invalidateQueries({ queryKey: ["transactions",] });
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
     },
     onError: (err) => {
       toast.error(err.message);

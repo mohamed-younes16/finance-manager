@@ -34,7 +34,7 @@ import { useStore } from "@/hooks/store";
 import { useDeleteAccount } from "@/hooks/accounts-hooks";
 
 const CellAction = ({ data }: { data: AccountResponseGetType }) => {
-  const { setchoosenId } = useStore();
+  const { setchoosenId, setFormData } = useStore();
   const { mutate } = useDeleteAccount();
 
   const { id: accountId } = data;
@@ -56,6 +56,7 @@ const CellAction = ({ data }: { data: AccountResponseGetType }) => {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
+              setFormData({ type: "account", data });
               setchoosenId(accountId);
             }}
             className="flex items-center gap-3"
@@ -89,7 +90,7 @@ const CellAction = ({ data }: { data: AccountResponseGetType }) => {
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={async () => {
-              mutate({ Ids: [data.id] });
+              mutate({ ids: [accountId!] });
             }}
           >
             Continue

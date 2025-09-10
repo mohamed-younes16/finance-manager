@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { JSX, useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -50,8 +50,8 @@ export const useConfirmAlert = (): [
               account and remove your data from our servers.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => handleCancel()}>
+          <AlertDialogFooter className="sm:space-x-0 gap-2">
+            <AlertDialogCancel  onClick={() => handleCancel()}>
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction onClick={() => handleConfirm()}>

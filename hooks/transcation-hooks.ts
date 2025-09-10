@@ -12,7 +12,6 @@ type UseGetTransactionsOptions = {
 
 export const useGetTransactions = (options: UseGetTransactionsOptions = {}) => {
   const { from = "", to = "", accountId = "" } = options;
-  console.log(options);
   const query = useQuery({
     queryKey: ["transactions", { from, to, accountId }],
     queryFn: async () => {
@@ -70,7 +69,9 @@ export const usePatchTransaction = () => {
     RequestTransactionPatchType
   >({
     mutationFn: async (json) => {
-      const res = await client.api.transactions["patch"].$post({ json });
+      const res = await client.api.transactions["patch"]["$post"]({
+        json,
+      });
       if (!res.ok) throw new Error((await res.json()).message);
 
       const { message } = await res.json();

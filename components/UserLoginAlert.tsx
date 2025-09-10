@@ -1,8 +1,7 @@
-import React from "react";
-import { Button } from "./ui/button";
-import Link from "next/link";
+import { Heading } from "@/app/(dashboard)/profile/page";
 import { ShieldAlert } from "lucide-react";
-import { Heading } from "@/app/(user)/(authenticated)/profile/page";
+import Link from "next/link";
+import { Button } from "./ui/button";
 
 const UserLoginAlert = () => {
   return (

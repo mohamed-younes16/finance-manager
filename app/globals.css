@@ -58,6 +58,9 @@
 .flexcenter {
   @apply flex justify-center items-center;
 }
+button {
+  cursor: pointer;
+}
 html {
   font-family: "Open Sans";
   scroll-behavior: smooth;

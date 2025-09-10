@@ -12,6 +12,10 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+
+  experimental: {
+    optimizePackageImports: ["@radix-ui/react-icons", "lucide-react"],
+  },
 };
 
 module.exports = nextConfig;

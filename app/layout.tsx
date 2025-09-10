@@ -2,13 +2,13 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { ReactNode } from "react";
 import "./globals.css";
 import { Toaster } from "sonner";
-import NavBar from "@/components/navbar/NavBar";
 import getCurrentUser from "@/actions";
 import { QueryProvider } from "@/providers/query";
 import { Inter } from "next/font/google";
-import { UserFetched } from "..";
+
 import ProgressBar from "@/components/navbar/ProgressBar";
 import { UserLoader } from "@/hooks/store";
+import { UserFetched } from "@/models/Schemas/Setup";
 
 export const inter = Inter({
   subsets: ["latin"],

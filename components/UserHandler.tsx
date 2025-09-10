@@ -15,7 +15,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ModeToggle } from "./ui/themeButton";
 import ImageContainer from "./ImageContainer";
-import { UserFetched } from "..";
+import { UserFetched } from "@/models/Schemas/Setup";
+
 
 const UserHandler = ({ userData }: { userData: UserFetched | null }) => {
   const searchParams = useSearchParams();

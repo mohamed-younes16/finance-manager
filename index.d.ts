@@ -1,15 +1,20 @@
+import { InferResponseType } from "hono";
+import { client } from "./lib/hono";
+
 type DateTime = string;
 
-interface UserFetched {
-  id: string;
-  name: string | null;
-  email: string;
-  username: string | null;
-  imageUrl: string | null;
-  bio: string | null;
-  customerId: string | null;
-  onboarded: boolean;
-}
+type ResponseTransactionGetType = InferResponseType<
+  (typeof client.api.transactions)[":id"]["$get"],
+  200
+>["transaction"];
+type ResponseAccountType = InferResponseType<
+  (typeof client.api.accounts)[":id"]["$get"],
+  200
+>["account"];
+type ResponseCategoryType = InferResponseType<
+  (typeof client.api.categories)[":id"]["$get"],
+  200
+>["category"];
 
 type PolarSubscriptionActivePayload = {
   type: "subscription.active";

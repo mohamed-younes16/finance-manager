@@ -1,10 +1,8 @@
 import { Hono } from "hono";
-import { CustomerPortal } from "@polar-sh/hono";
 import { zValidator } from "@hono/zod-validator";
-import * as z from "zod";
-import prismadb from "@/lib/prismabd";
+import { z } from "zod";
 
-import getCurrentUser from "@/actions";
+import prismadb from "@/lib/prismabd";
 import { chargilyCli } from "@/lib/chargily";
 import { verifySignature } from "@chargily/chargily-pay";
 import { Buffer } from "buffer";
@@ -46,7 +44,6 @@ export const chargily = new Hono()
     }
   )
   .post("/webhooks", async (c) => {
-
     const buffer = Buffer.from(await c.req.raw.arrayBuffer());
     const Signature = c.req.raw.headers.get("signature") || "";
 
@@ -77,6 +74,6 @@ export const chargily = new Hono()
     });
     console.log(user);
     return c.json({ pay: user });
-  })
+  });
 
 export default chargily;

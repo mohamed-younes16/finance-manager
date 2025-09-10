@@ -1,6 +1,4 @@
 import { ReactNode, Suspense } from "react";
-
-import CliComp from "@/providers/modalProvider";
 import Welcome from "@/components/Welcome";
 
 import Filter from "@/components/Filter";

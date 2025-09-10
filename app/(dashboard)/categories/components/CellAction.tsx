@@ -34,7 +34,7 @@ import { useDeleteCategory } from "@/hooks/categories-hooks";
 import { CategoryResponseGetType } from "./columns";
 
 const CellAction = ({ data }: { data: CategoryResponseGetType }) => {
-  const { setchoosenId } = useStore();
+  const { setchoosenId, setFormData } = useStore();
   const { mutate } = useDeleteCategory();
 
   const { id: categorieId } = data;
@@ -56,6 +56,7 @@ const CellAction = ({ data }: { data: CategoryResponseGetType }) => {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
+              setFormData({ type: "category", data });
               setchoosenId(categorieId);
             }}
             className="flex items-center gap-3"
@@ -89,7 +90,7 @@ const CellAction = ({ data }: { data: CategoryResponseGetType }) => {
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={async () => {
-              mutate({ Ids: [data.id] });
+              mutate({ ids: [data.id] });
             }}
           >
             Continue

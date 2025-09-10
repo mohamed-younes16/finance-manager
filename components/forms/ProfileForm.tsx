@@ -4,8 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useForm } from "react-hook-form";
 
-import * as z from "zod";
-
 import {
   Form,
   FormControl,
@@ -21,7 +19,11 @@ import Image from "next/image";
 import { UploadDropzone } from "@/utils/uploadthing";
 import "@uploadthing/react/styles.css";
 import { X } from "lucide-react";
-import { ProfileSchema } from "@/models/Schemas/Setup";
+import {
+  ProfileSchema,
+  UserFetched,
+  ProfileSchemaType,
+} from "@/models/Schemas/Setup";
 import { usePatchProfile } from "@/hooks/user-hooks";
 
 const ProfileForm = ({ userData }: { userData: UserFetched | null }) => {
@@ -32,12 +34,12 @@ const ProfileForm = ({ userData }: { userData: UserFetched | null }) => {
     username: userData?.username || "",
   };
   const { mutate, isPending } = usePatchProfile();
-  const form = useForm<z.infer<typeof ProfileSchema>>({
+  const form = useForm<ProfileSchemaType>({
     resolver: zodResolver(ProfileSchema),
     defaultValues,
   });
 
-  async function onSubmit(values: z.infer<typeof ProfileSchema>) {
+  async function onSubmit(values: ProfileSchemaType) {
     mutate(values);
   }
   return (
@@ -158,7 +160,9 @@ const ProfileForm = ({ userData }: { userData: UserFetched | null }) => {
             type="submit"
             disabled={isPending}
             className={`${isPending ? "  bg-zinc-500" : ""} ${
-              form.formState.isDirty ? "opacity-100 scale-100" : "opacity-0 scale-75 pointer-events-none"
+              form.formState.isDirty
+                ? "opacity-100 scale-100"
+                : "opacity-0 scale-75 pointer-events-none"
             } flexcenter gap-2`}
           >
             Submit

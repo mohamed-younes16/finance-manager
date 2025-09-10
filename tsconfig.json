@@ -31,12 +31,20 @@
     "strictNullChecks": true
   },
   "include": [
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "components/**/*.tsx",
+    "hooks/**/*.ts",
+    "lib/**/*.ts",
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "types/**/*.ts",
     ".next/types/**/*.ts"
-, "../E-commerce-admin/lib/stripe.ts"  ],
+  ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    ".next",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts"
   ]
 }

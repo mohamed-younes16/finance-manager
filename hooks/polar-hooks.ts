@@ -1,6 +1,6 @@
 import { client } from "@/lib/hono";
+import { UserFetched } from "@/models/Schemas/Setup";
 import { useQuery } from "@tanstack/react-query";
-import { UserFetched } from "..";
 
 export const usePolarCheckout = (
   user: UserFetched,

@@ -3,8 +3,13 @@
 import { Button } from "../ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { RegisterSchema, Loginschema } from "@/models/Schemas/Setup";
-import * as z from "zod";
+import {
+  RegisterSchema,
+  Loginschema,
+  RegisterSchemaType,
+  LoginschemaType,
+} from "@/models/Schemas/Setup";
+
 import {
   Form,
   FormControl,
@@ -38,9 +43,7 @@ const RegisterForm = ({ type }: { type: "login" | "register" }) => {
           email: "",
           password: "",
         };
-  const form = useForm<
-    z.infer<typeof RegisterSchema> | z.infer<typeof Loginschema>
-  >({
+  const form = useForm<RegisterSchemaType | LoginschemaType>({
     resolver: zodResolver(type == "login" ? Loginschema : RegisterSchema),
     reValidateMode: "onChange",
     mode: "all",
@@ -70,7 +73,7 @@ const RegisterForm = ({ type }: { type: "login" | "register" }) => {
     setCleared(percentage);
   }, [form.formState]);
   async function onSubmit(
-    values: z.infer<typeof RegisterSchema> | z.infer<typeof Loginschema>
+    values: RegisterSchemaType | LoginschemaType
   ) {
     try {
       const data = {

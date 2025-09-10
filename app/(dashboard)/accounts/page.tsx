@@ -1,16 +1,14 @@
 "use client";
 import Heading from "@/components/Heading";
+import FormSheet from "@/components/sheets/FormSheet";
+import TableSkeleton from "@/components/TableSkeleton";
 import { DataTable } from "@/components/ui/data-table";
+import { Separator } from "@/components/ui/separator";
+import { useDeleteAccount, useGetAccounts } from "@/hooks/accounts-hooks";
+import CliComp from "@/providers/modalProvider";
 import { format } from "date-fns";
 import { Users2Icon } from "lucide-react";
-import React from "react";
-import { Separator } from "@/components/ui/separator";
 import { AccountResponseGetType, columns } from "./components/columns";
-import CliComp from "@/providers/modalProvider";
-import FormSheet from "@/components/sheets/FormSheet";
-import { useDeleteAccount, useGetAccounts } from "@/hooks/accounts-hooks";
-import TableSkeleton from "@/components/TableSkeleton";
-import { useGetPurchase } from "@/hooks/purchase-hooks";
 
 const page = () => {
   const { data: accounts, isLoading } = useGetAccounts();
@@ -26,7 +24,6 @@ const page = () => {
     }));
   }
 
-  const { data: pay } = useGetPurchase();
 
   return (
     <div className="bg-background min-h-screen rounded-md py-4  w-full px-8 max-lg:px-4 ">
@@ -47,7 +44,7 @@ const page = () => {
       {!!accounts ? (
         <DataTable
           queryKey={["accounts"]}
-          OnDelete={(Ids) => mutate({ Ids: Ids.map((e) => e.original.id) })}
+          OnDelete={(ids) => mutate({ ids: ids.map((e) => e.original.id) })}
           disabled={isDisabeled}
           searchKey="name"
           columns={columns}

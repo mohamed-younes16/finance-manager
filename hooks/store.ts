@@ -1,8 +1,18 @@
 "use client";
 import getCurrentUser from "@/actions";
+import { UserFetched } from "@/models/Schemas/Setup";
 import { useEffect } from "react";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import {
+  ResponseAccountType,
+  ResponseCategoryType,
+  ResponseTransactionGetType,
+} from "..";
+type formData =
+  | { type: "account"; data: ResponseAccountType }
+  | { type: "category"; data: ResponseCategoryType }
+  | { type: "transaction"; data: ResponseTransactionGetType };
 
 type Store = {
   SideBarOpen: boolean;
@@ -13,12 +23,14 @@ type Store = {
   setUser: (v: any) => void;
   isFormSheetOpen: boolean;
   setIsFormSheetOpen: (v: boolean) => void;
-  choosenId: string ;
+  choosenId: string;
   setchoosenId: (v: string | undefined) => void;
   from: Date | undefined;
   to: Date | undefined;
   setFrom: (d: Date | undefined) => void;
   setTo: (d: Date | undefined) => void;
+  formData: formData | null;
+  setFormData: (formData: formData | null) => void;
 };
 
 export const useStore = create<Store>()(
@@ -34,11 +46,12 @@ export const useStore = create<Store>()(
       setIsFormSheetOpen: (v: boolean) => set(() => ({ isFormSheetOpen: v })),
       isSheetOpen: false,
       setIsSheetOpen: (v: boolean) => set(() => ({ isSheetOpen: v })),
-
       SideBarOpen: false,
       setSideBarOpen: (v: boolean) => set(() => ({ SideBarOpen: v })),
       user: null,
       setUser: (v) => set(() => ({ user: v })),
+      formData: null,
+      setFormData:(formData) => set(() => ({ formData })),
     }),
     { name: "data", storage: createJSONStorage(() => localStorage) }
   )

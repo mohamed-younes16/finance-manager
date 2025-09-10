@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { useGetAccounts } from "@/hooks/accounts-hooks";
-import { useGetsummary } from "@/hooks/summary-hooks";
+
 import { CalendarIcon, Loader2 } from "lucide-react";
 import { Calendar } from "./ui/calendar";
 import { format, parse, subDays } from "date-fns";
@@ -34,8 +34,7 @@ const Filter = () => {
   });
   const router = useRouter();
   const { data: accounts, isLoading: l1 } = useGetAccounts();
-  const { isLoading: l2 } = useGetsummary({ from, to, accountId });
-  const isLoading = l1 || l2;
+  const isLoading = l1;
   const { from: fromState, to: toState, setFrom, setTo } = useStore();
 
   const handleFilterChange = (params: {
@@ -69,7 +68,6 @@ const Filter = () => {
     router.push(url as any, { scroll: false });
   };
   useEffect(() => {
-
     if (fromState && toState && !(from && to)) {
       setDate({ from: fromState, to: toState });
       handleFilterChange({

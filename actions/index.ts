@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOpts } from "@/app/api/auth/[...nextauth]/route";
 import prismadb from "@/lib/prismabd";
-import { UserFetched } from "..";
+import { UserFetched } from "@/models/Schemas/Setup";
 
 export const getSession = async () => await getServerSession(authOpts);
 
@@ -33,11 +33,3 @@ export default async function getCurrentUser() {
     return null;
   }
 }
-export const checkAuth = async (c, next) => {
-  const session = await getSession();
-
-  if (!session) {
-    return c.json({ message: "Unauthorized " }, { status: 401 });
-  }
-  await next();
-};

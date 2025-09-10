@@ -1,16 +1,15 @@
 "use client";
 import Heading from "@/components/Heading";
 import { DataTable } from "@/components/ui/data-table";
+import { Separator } from "@/components/ui/separator";
+import CliComp from "@/providers/modalProvider";
 import { format } from "date-fns";
 import { Users2Icon } from "lucide-react";
-import React from "react";
-import { Separator } from "@/components/ui/separator";
 import { CategoryResponseGetType, columns } from "./components/columns";
-import CliComp from "@/providers/modalProvider";
 
-import { useDeleteCategory, useGetCategories } from "@/hooks/categories-hooks";
 import FormSheet from "@/components/sheets/FormSheet";
 import TableSkeleton from "@/components/TableSkeleton";
+import { useDeleteCategory, useGetCategories } from "@/hooks/categories-hooks";
 
 const page = () => {
   const { data: categories, isLoading } = useGetCategories();
@@ -45,7 +44,7 @@ const page = () => {
       {!!categories ? (
         <DataTable
           queryKey={["categories"]}
-          OnDelete={(Ids) => mutate({ Ids: Ids.map((e) => e.original.id) })}
+          OnDelete={(ids) => mutate({ ids: ids.map((e) => e.original.id) })}
           disabled={isDisabeled}
           searchKey="name"
           columns={columns}

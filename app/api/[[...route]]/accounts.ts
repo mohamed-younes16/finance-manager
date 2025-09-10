@@ -1,136 +1,308 @@
-import { Hono } from "hono";
-import { zValidator } from "@hono/zod-validator";
+import { OpenAPIHono } from "@hono/zod-openapi";
+import { z } from "zod";
 import prismadb from "@/lib/prismabd";
 import getCurrentUser from "@/actions";
-import * as z from "zod";
+import { AccountSchema } from "@/models/Schemas/Setup";
+import { createRoute } from "@hono/zod-openapi";
 
-const accounts = new Hono()
-  .get("/", async (c) => {
+// Schema for account responses
+const AccountResponseSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  createdAt: z.date(),
+  balance: z.number().optional(),
+  currency: z.string().optional(),
+});
+
+// List all accounts
+const listAccountsRoute = createRoute({
+  method: "get",
+  path: "/",
+  responses: {
+    200: {
+      description: "List of user's accounts",
+      content: {
+        "application/json": {
+          schema: z.object({
+            accounts: z.array(AccountResponseSchema),
+          }),
+        },
+      },
+    },
+    500: {
+      description: "Internal server error",
+      content: {
+        "application/json": {
+          schema: z.object({ message: z.string() }),
+        },
+      },
+    },
+  },
+});
+
+const getAccountRoute = createRoute({
+  method: "get",
+  path: "/{id}",
+  request: {
+    params: z.object({
+      id: z.string(),
+    }),
+  },
+  responses: {
+    200: {
+      description: "Account details",
+      content: {
+        "application/json": {
+          schema: z.object({
+            account: AccountResponseSchema,
+          }),
+        },
+      },
+    },
+    400: {
+      description: "Invalid ID format",
+      content: {
+        "application/json": {
+          schema: z.object({ message: z.string() }),
+        },
+      },
+    },
+    404: {
+      description: "Account not found",
+      content: {
+        "application/json": {
+          schema: z.object({ message: z.string() }),
+        },
+      },
+    },
+  },
+});
+
+const createAccountRoute = createRoute({
+  method: "post",
+  path: "/",
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: AccountSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    201: {
+      description: "Account created successfully",
+      content: {
+        "application/json": {
+          schema: z.object({
+            message: z.string(),
+            account: AccountResponseSchema,
+          }),
+        },
+      },
+    },
+    400: {
+      description: "Validation error",
+      content: {
+        "application/json": {
+          schema: z.object({ message: z.string() }),
+        },
+      },
+    },
+  },
+});
+
+const updateAccountRoute = createRoute({
+  method: "post",
+  path: "/patch",
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: z.object({
+            name: z.string().min(1, "Name is required"),
+            id: z.string(),
+          }),
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Account updated successfully",
+      content: {
+        "application/json": {
+          schema: z.object({
+            message: z.string(),
+            account: AccountResponseSchema,
+          }),
+        },
+      },
+    },
+    404: {
+      description: "Account not found",
+      content: {
+        "application/json": {
+          schema: z.object({ message: z.string() }),
+        },
+      },
+    },
+    400: {
+      description: "server error",
+      content: {
+        "application/json": {
+          schema: z.object({ message: z.string() }),
+        },
+      },
+    },
+  },
+});
+
+const deleteAccountsRoute = createRoute({
+  method: "post",
+  path: "/delete",
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: z.object({
+            ids: z.array(z.string()),
+          }),
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Accounts deleted successfully",
+      content: {
+        "application/json": {
+          schema: z.object({
+            message: z.string(),
+            count: z.number(),
+          }),
+        },
+      },
+    },
+    400: {
+      description: "No account IDs provided",
+      content: {
+        "application/json": {
+          schema: z.object({ message: z.string() }),
+        },
+      },
+    },
+  },
+});
+
+const accounts = new OpenAPIHono()
+  .openapi(listAccountsRoute, async (c) => {
     try {
       const user = await getCurrentUser();
       const accounts = await prismadb.financeAccount.findMany({
         where: { ownerId: user!.id },
         orderBy: { createdAt: "desc" },
-        select: { name: true, createdAt: true, id: true },
       });
-
       return c.json({ accounts }, 200);
     } catch (error) {
-      console.log(error, "##########finance accounts get ###############");
-      return c.json({ error: "error in server" }, 500);
+      console.error("Error fetching accounts:", error);
+      return c.json({ message: "Error fetching accounts" }, 500);
     }
   })
-  .get(
-    "/:id",
-    zValidator("param", z.object({ id: z.string() })),
+  .openapi(getAccountRoute, async (c) => {
+    try {
+      const user = await getCurrentUser();
+      const { id } = c.req.valid("param");
 
-    async (c) => {
-      try {
-        const user = await getCurrentUser();
-        const { id } = c.req.valid("param");
-        if (!id) {
-          return c.json({ message: "Missing required fields: Id" }, 401);
-        }
-        const account = await prismadb.financeAccount.findFirst({
-          where: { ownerId: user!.id, id },
-          select: { name: true, createdAt: true, id: true },
-        });
+      const account = await prismadb.financeAccount.findFirst({
+        where: { id, ownerId: user!.id },
+      });
 
-        return c.json({ account }, 200);
-      } catch (error) {
-        console.log(error, "##########finance account get ###############");
-        return c.json({ error: "error in server" }, 500);
+      if (!account) {
+        return c.json({ message: "Account not found" }, 404);
       }
+
+      return c.json({ account }, 200);
+    } catch (error) {
+      console.error("Error fetching account:", error);
+      return c.json({ message: "Error fetching account" }, 400);
     }
-  )
-  .post(
-    "/patch",
-    zValidator("json", z.object({ name: z.string(), id: z.string() })),
+  })
+  .openapi(createAccountRoute, async (c) => {
+    try {
+      const user = await getCurrentUser();
+      const data = c.req.valid("json");
 
-    async (c) => {
-      try {
-        const user = await getCurrentUser();
-        const { name, id } = c.req.valid("json");
-        if (!name) {
-          return c.json({ message: "Missing required fields: name" }, 401);
-        }
-        const account = await prismadb.financeAccount.update({
-          where: { ownerId: user!.id, id },
-          data: { name },
-        });
+      const account = await prismadb.financeAccount.create({
+        data: {
+          ...data,
+          owner: { connect: { id: user!.id } },
+        },
+      });
 
-        return c.json({ message:'patched with success' }, 200);
-      } catch (error) {
-        console.log(error, "##########finance account get ###############");
-        return c.json({ message: "error in server" }, 500);
-      }
+      return c.json(
+        {
+          message: "Account created successfully",
+          account,
+        },
+        201
+      );
+    } catch (error) {
+      console.error("Error creating account:", error);
+      return c.json({ message: "Error creating account" }, 400);
     }
-  )
-  .post(
-    "/",
-    zValidator(
-      "json",
-      z.object({
-        name: z.string(),
-      })
-    ),
-    async (c) => {
-      const { name } = c.req.valid("json");
-      if (!name) {
-        return c.json(
-          { message: "Missing required fields: name, username, bio, imageUrl" },
-          { status: 400 }
-        );
-      }
-      try {
-        const user = await getCurrentUser();
+  })
+  .openapi(updateAccountRoute, async (c) => {
+    try {
+      const user = await getCurrentUser();
 
-        await prismadb.financeAccount.create({
-          data: { name, owner: { connect: { id: user?.id } } },
-          select: { name: true },
-        });
+      const { name, id } = c.req.valid("json");
 
-        return c.json(
-          { message: "your new finance account is ready" },
-          { status: 201 }
-        );
-      } catch (error) {
-        console.log(error, "##########finance account create ###############");
-        return c.json({ message: "error in server" }, 500);
+      const account = await prismadb.financeAccount.update({
+        where: { id, ownerId: user!.id },
+        data: { name },
+      });
+
+      if (!account) {
+        return c.json({ message: "Account not found" }, 404);
       }
+      return c.json(
+        {
+          message: "Account updated successfully",
+          account,
+        },
+        200
+      );
+    } catch (error) {
+      console.error("Error updating account:", error);
+      return c.json({ message: "Error updating account" }, 400);
     }
-  )
-  .post(
-    "/delete",
-    zValidator(
-      "json",
-      z.object({
-        Ids: z.array(z.string()),
-      })
-    ),
-    async (c) => {
-      const { Ids } = c.req.valid("json");
-      if (!(Ids.length > 0)) {
-        return c.json({ message: "Missing required fields: Ids" }, 400);
+  })
+  .openapi(deleteAccountsRoute, async (c) => {
+    try {
+      const user = await getCurrentUser();
+      const { ids } = c.req.valid("json");
+      console.log(ids);
+      if (!ids.length) {
+        return c.json({ message: "No account IDs provided" }, 400);
       }
-      try {
-        const user = await getCurrentUser();
-        !!user &&
-          (await prismadb.financeAccount.deleteMany({
-            where: { id: { in: Ids }, ownerId: user.id },
-          }));
 
-        return c.json(
-          {
-            message: `${Ids.length} of selected finance accounts has been deleted successfully`,
-          },
-          { status: 201 }
-        );
-      } catch (error) {
-        console.log(error, "##########Finance account Delete ###############");
-        return c.json({ message: "error in server while deleteing" }, 500);
-      }
+      const { count } = await prismadb.financeAccount.deleteMany({
+        where: {
+          id: { in: ids },
+          ownerId: user!.id,
+        },
+      });
+
+      return c.json({
+        message: `${count} account(s) deleted successfully`,
+        count,
+      });
+    } catch (error) {
+      console.error("Error deleting accounts:", error);
+      return c.json({ message: "Error deleting accounts" }, 400);
     }
-  );
+  });
 
 export default accounts;

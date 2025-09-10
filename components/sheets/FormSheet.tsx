@@ -11,30 +11,46 @@ import { useGetCategory } from "@/hooks/categories-hooks";
 import DataForm from "../forms/DataForm";
 import TransactionForm from "../forms/TranscationForm";
 import { useGetTransaction } from "@/hooks/transcation-hooks";
-import { InferResponseType } from "hono";
-import { client } from "@/lib/hono";
+
 import { formatMilliunits } from "@/utils";
-type ResponseTransactionGetType = InferResponseType<
-  (typeof client.api.transactions)[":id"]["$get"],
-  200
->["transaction"];
-const FormSheet = ({ type }) => {
-  const { isFormSheetOpen, setIsFormSheetOpen, choosenId, setchoosenId } =
-    useStore();
+import {
+  ResponseAccountType,
+  ResponseCategoryType,
+  ResponseTransactionGetType,
+} from "@/index";
+
+const FormSheet = ({
+  type,
+}: {
+  type: "account" | "category" | "transaction";
+}) => {
+  const {
+    isFormSheetOpen,
+    setIsFormSheetOpen,
+    choosenId,
+    setchoosenId,
+    formData,
+    setFormData,
+  } = useStore();
   const pathname = usePathname();
 
-  const { data: entity, isLoading: l1 } =
-    type === "account" ? useGetAccount(choosenId) : useGetCategory(choosenId);
+  // const { data, isLoading } =
+  //   type === "account"
+  //     ? useGetAccount(choosenId)
+  //     : type === "category"
+  //     ? useGetCategory(choosenId)
+  //     : { data: null, isLoading: false };
 
   let transaction: ResponseTransactionGetType | null = null;
-  let l2 = false;
+  let accountCategory: ResponseAccountType | ResponseCategoryType | null = null;
 
-  if (type === "transaction") {
-    ({ data: transaction = null, isLoading: l2 } =
-      useGetTransaction(choosenId));
+  if (formData) {
+    if (formData.type === "transaction") transaction = formData.data;
+    if (formData.type === "account" || formData.type === "category") {
+      accountCategory = formData.data;
+    }
   }
 
-  const isLoading = l1 || l2;
   useEffect(() => setIsFormSheetOpen(false), [pathname]);
 
   return (
@@ -44,7 +60,10 @@ const FormSheet = ({ type }) => {
           open={isFormSheetOpen}
           onOpenChange={(e) => {
             setIsFormSheetOpen(e);
-            !e && setchoosenId(undefined);
+            if (!e) {
+              setchoosenId(undefined);
+              setFormData(null);
+            }
           }}
         >
           <SheetTrigger asChild className="">
@@ -78,17 +97,15 @@ const FormSheet = ({ type }) => {
                 </p>
               </div>
               <div className="max-w-md mx-auto">
-                {choosenId && isLoading ? (
-                  <Loader2 className="w-14 h-14 animate-spin text-foreground" />
-                ) : type === "transaction" ? (
+                {type === "transaction" ? (
                   choosenId ? (
-                    !!transaction && !l2 ? (
+                    !!transaction ? (
                       <TransactionForm
                         id={choosenId}
                         defaultValues={{
                           category: transaction.categoryRef?.name || "",
                           accountId: transaction.accountRef.id,
-                          amount: formatMilliunits(transaction.amount),
+                          amount: transaction.amount,
                           categoryId: transaction?.categoryRef?.id || "",
                           notes: transaction.notes || "",
                           payee: transaction.payee,
@@ -97,6 +114,7 @@ const FormSheet = ({ type }) => {
                         OnDone={() => {
                           setIsFormSheetOpen(false);
                           setchoosenId(undefined);
+                          setFormData(null);
                         }}
                       />
                     ) : null
@@ -107,19 +125,21 @@ const FormSheet = ({ type }) => {
                       OnDone={() => {
                         setIsFormSheetOpen(false);
                         setchoosenId(undefined);
+                        setFormData(null);
                       }}
                     />
                   )
                 ) : (
                   <DataForm
                     type={type}
-                    id={entity?.id}
+                    id={accountCategory?.id}
                     defaultValues={{
-                      name: entity?.name || "",
+                      name: accountCategory?.name ?? "",
                     }}
                     OnDone={() => {
                       setIsFormSheetOpen(false);
                       setchoosenId(undefined);
+                      setFormData(null);
                     }}
                   />
                 )}

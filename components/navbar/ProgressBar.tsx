@@ -14,7 +14,7 @@ export default function ProgressBar() {
   const isMutating = useIsMutating();
 
   useEffect(() => {
-    console.log(isFetching, isMutating, pathname);
+
     if (isFetching > 0 || isMutating > 0) {
       NProgress.start();
     } else {

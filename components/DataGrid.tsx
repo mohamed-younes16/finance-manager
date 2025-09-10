@@ -12,6 +12,7 @@ const DataGrid = () => {
   const accountId = searchParams.get("accountId") || "";
 
   const { data, isLoading } = useGetsummary({ from, to, accountId });
+  
   const dateRange = formatDateRange({
     from: from,
     to: to,

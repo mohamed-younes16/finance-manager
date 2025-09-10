@@ -1,23 +1,25 @@
 "use client";
+import ImportCard from "@/components/forms/ImportCard";
 import Heading from "@/components/Heading";
-import { DataTable } from "@/components/ui/data-table";
-import { Users2Icon } from "lucide-react";
-import React, { Suspense, useState } from "react";
-import { Separator } from "@/components/ui/separator";
-import { TransactionResponseGetType, columns } from "./components/columns";
-import CliComp from "@/providers/modalProvider";
+import UploadButton from "@/components/inputs/UploadButton";
 import FormSheet from "@/components/sheets/FormSheet";
+import TableSkeleton from "@/components/TableSkeleton";
+import { Button } from "@/components/ui/button";
+import { DataTable } from "@/components/ui/data-table";
+import { Separator } from "@/components/ui/separator";
+import { useGetPlan } from "@/hooks/purchase-hooks";
 import {
   useDeleteTransaction,
   useGetTransactions,
 } from "@/hooks/transcation-hooks";
-import TableSkeleton from "@/components/TableSkeleton";
+import CliComp from "@/providers/modalProvider";
 import { formatMilliunits } from "@/utils";
-import UploadButton from "@/components/inputs/UploadButton";
-import ImportCard from "@/components/forms/ImportCard";
-import { Button } from "@/components/ui/button";
-import { useGetPlan } from "@/hooks/purchase-hooks";
+import { Users2Icon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
+import { TransactionResponseGetType, columns } from "./components/columns";
+import { InferResponseType } from "hono";
+import { client } from "@/lib/hono";
 
 enum VARIANTS {
   LIST = "LIST",
@@ -29,8 +31,10 @@ const INITIAL_IMPORT_RESULTS = {
   errors: [],
   meta: [],
 };
-
-
+export type ResponseTransactionsGetType = InferResponseType<
+  typeof client.api.transactions.$get,
+  200
+>["transactions"][number];
 const TransactionsContent = () => {
   const searchParams = useSearchParams();
   const from = searchParams.get("from") || "";
@@ -59,16 +63,11 @@ const TransactionsContent = () => {
     setImportRes(res);
   };
 
-  let formattedTransactions: TransactionResponseGetType[] = [];
+  let formattedTransactions: ResponseTransactionsGetType[] = [];
   if (transactions) {
     formattedTransactions = transactions.map((e) => ({
-      id: e.id,
-      accountRef: e.accountRef.name,
-      categoryRef: e.categoryRef?.name,
+      ...e,
       amount: formatMilliunits(e.amount),
-      createdAt: e.createdAt,
-      notes: e.notes,
-      payee: e.payee,
     }));
   }
 
@@ -108,7 +107,7 @@ const TransactionsContent = () => {
           ) : (
             <DataTable
               queryKey={["transactions", { from, to, accountId }]}
-              OnDelete={(Ids) => mutate({ Ids: Ids.map((e) => e.original.id) })}
+              OnDelete={(ids) => mutate({ ids: ids.map((e) => e.original.id) })}
               disabled={isDisabled}
               searchKey="name"
               columns={columns}

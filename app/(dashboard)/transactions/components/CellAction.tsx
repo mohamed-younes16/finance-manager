@@ -1,14 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,8 +11,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-import { TransactionResponseGetType } from "./columns";
 import {
   ClipboardEdit,
   CopyIcon,
@@ -32,12 +31,22 @@ import { toast } from "sonner";
 
 import { useStore } from "@/hooks/store";
 import { useDeleteTransaction } from "@/hooks/transcation-hooks";
+import { ResponseTransactionsGetType } from "../page";
+import { transactionSchema } from "@/models/Schemas/Setup";
 
-const CellAction = ({ data }: { data: TransactionResponseGetType }) => {
-  const { setchoosenId } = useStore();
+const CellAction = ({ data }: { data: ResponseTransactionsGetType }) => {
+  const { setchoosenId, setFormData } = useStore();
   const { mutate } = useDeleteTransaction();
 
-  const { id: accountId } = data;
+  const {
+    id: accountId,
+    accountRef: { name },
+    amount,
+    notes,
+    payee,
+    createdAt,
+    categoryRef,
+  } = data;
 
   const copy = () => {
     navigator.clipboard.writeText(data.id);
@@ -57,6 +66,16 @@ const CellAction = ({ data }: { data: TransactionResponseGetType }) => {
           <DropdownMenuItem
             onClick={() => {
               setchoosenId(accountId);
+              const da = transactionSchema.safeParse({
+                amount,
+                payee,
+                notes: notes ?? "",
+                createdAt,
+                category: categoryRef?.name ?? "",
+                accountId,
+                categoryId: categoryRef?.id ?? "",
+              });
+              if (da?.data) setFormData({ type: "transaction", data });
             }}
             className="flex items-center gap-3"
           >
@@ -89,7 +108,7 @@ const CellAction = ({ data }: { data: TransactionResponseGetType }) => {
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={async () => {
-              mutate({ Ids: [data.id] });
+              mutate({ ids: [data.id] });
             }}
           >
             Continue

@@ -2,7 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+
+import type { infer as zInfer } from "zod";
 
 import {
   Form,
@@ -15,7 +16,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-import { AccountSchema, CategorySchema } from "@/models/Schemas/Setup";
+import {
+  AccountSchema,
+  AccountSchemaType,
+  CategorySchema,
+  CategorySchemaType,
+} from "@/models/Schemas/Setup";
 import {
   useAddAccount,
   useDeleteAccount,
@@ -29,7 +35,6 @@ import {
 import { Trash2Icon } from "lucide-react";
 import { useEffect } from "react";
 
-
 const DataForm = ({
   OnDone,
   defaultValues,
@@ -38,19 +43,19 @@ const DataForm = ({
 }:
   | {
       OnDone: () => void;
-      defaultValues: z.infer<typeof AccountSchema>;
+      defaultValues: AccountSchemaType;
       id?: string;
       type: "account";
     }
   | {
       OnDone: () => void;
-      defaultValues: z.infer<typeof CategorySchema>;
+      defaultValues: CategorySchemaType;
       id?: string;
       type: "category";
     }) => {
   const isAccount = type === "account";
   const isCategory = type === "category";
-
+  console.log(defaultValues);
   const {
     isPending: p1,
     mutate: addHandler,
@@ -73,17 +78,17 @@ const DataForm = ({
   useEffect(() => {
     isSuccess && OnDone();
   }, [isSuccess]);
-
+  type FormData = AccountSchemaType | CategorySchemaType;
   const formSchema = isAccount ? AccountSchema : CategorySchema;
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
 
   const { reset, handleSubmit, control, formState } = form;
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: FormData) {
     try {
       id ? patchHandler({ id, name: values.name }) : addHandler(values);
 
@@ -95,7 +100,7 @@ const DataForm = ({
 
   const handleDelete = () => {
     deleteHandler({
-      Ids: [id as string],
+      ids: [id!],
     });
     OnDone();
   };
@@ -136,7 +141,7 @@ const DataForm = ({
             )}
           </Button>
         )}
-        {!!id && (
+        {id ? (
           <Button
             variant={"outline"}
             type="button"
@@ -149,7 +154,7 @@ const DataForm = ({
             <Trash2Icon />
             <p>Delete {isAccount ? "Account" : "Category"}</p>
           </Button>
-        )}
+        ) : null}
       </form>
     </Form>
   );

@@ -49,7 +49,7 @@ export const usePatchAccount = () => {
     RequestAccountPatchType
   >({
     mutationFn: async (json) => {
-      const res = await client.api.accounts["patch"].$post({ json });
+      const res = await client.api.accounts.patch.$post({ json });
       if (!res.ok) throw new Error((await res.json()).message);
 
       const { message } = await res.json();
@@ -99,7 +99,7 @@ export const useAddAccount = () => {
   });
   return query;
 };
-/////////////////////////////////////////////
+
 ////////////////////////////////////////////
 
 type RequestAccountDeleteType = InferRequestType<
