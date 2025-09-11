@@ -91,8 +91,9 @@ const TransactionForm = ({
         (defaultValues && defaultValues?.category) ||
         (categories && categories[0]?.name) ||
         "",
-      notes: "",
+      notes: defaultValues?.notes || "",
     },
+    mode: "all",
   });
 
   const { handleSubmit, control, formState, watch, setValue } = form;
@@ -124,6 +125,9 @@ const TransactionForm = ({
   useEffect(() => {
     if (isSuccess) OnDone();
   }, [isSuccess]);
+  useEffect(() => {
+    console.log(form.watch(), form.formState.isValid);
+  }, [form.formState]);
 
   return (
     <Form {...form}>
@@ -302,7 +306,7 @@ const TransactionForm = ({
             disabled={isPending}
             className={`${
               isPending && "opacity-50"
-            } flexcenter w-full  hover:text-red-700 font-semibold  gap-2`}
+            } flexcenter w-full  text-red-500 hover:text-red-700 hover:border-red-300 font-semibold  gap-2`}
           >
             <Trash2Icon />
             <p>Delete Transaction</p>

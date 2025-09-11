@@ -74,7 +74,7 @@ const FormSheet = ({
               </p>
             </Button>
           </SheetTrigger>
-          <SheetContent side={"right"} className="px-6 overflow-auto pt-20">
+          <SheetContent side={"right"} className="px-6 overflow-auto pt-10">
             <>
               <div className="text-center mb-8 mt-4">
                 <h1 className="text-2xl font-bold">

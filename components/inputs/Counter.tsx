@@ -38,8 +38,13 @@ const AmountInput = ({
         </Button>
         <Input
           type="number"
-          step={"0.001"}
-          onChange={(e) => form.setValue("amount", parseFloat(e.target.value))}
+          step={"0.01"}
+          onChange={(e) =>
+            form.setValue("amount", parseFloat(e.target.value), {
+              shouldValidate: true,
+              shouldDirty: true,
+            })
+          }
           defaultValue={form.getValues("amount")}
         />
       </div>{" "}

@@ -4,17 +4,21 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import getCurrentUser from "@/actions";
 import { QueryProvider } from "@/providers/query";
-import { Inter } from "next/font/google";
+import { Figtree } from "next/font/google";
+import type { Metadata } from "next";
 
 import ProgressBar from "@/components/navbar/ProgressBar";
 import { UserLoader } from "@/hooks/store";
 import { UserFetched } from "@/models/Schemas/Setup";
 
-export const inter = Inter({
+export const inter = Figtree({
   subsets: ["latin"],
   display: "swap",
 });
 
+export const metadata: Metadata = {
+  title: "Finance",
+};
 export default async function RootLayout({
   children,
 }: {
