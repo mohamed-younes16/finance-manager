@@ -20,7 +20,7 @@ type Store = {
   isSheetOpen: boolean;
   setIsSheetOpen: (v: boolean) => void;
   user: UserFetched | null;
-  setUser: (v: any) => void;
+  setUser: (v: UserFetched | null) => void;
   isFormSheetOpen: boolean;
   setIsFormSheetOpen: (v: boolean) => void;
   choosenId: string;
@@ -51,7 +51,7 @@ export const useStore = create<Store>()(
       user: null,
       setUser: (v) => set(() => ({ user: v })),
       formData: null,
-      setFormData:(formData) => set(() => ({ formData })),
+      setFormData: (formData) => set(() => ({ formData })),
     }),
     { name: "data", storage: createJSONStorage(() => localStorage) }
   )

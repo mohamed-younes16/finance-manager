@@ -1,7 +1,5 @@
-import { formatedPercentage, formatedPrice } from "@/utils";
-import { format } from "date-fns";
+import { formatedPercentage } from "@/utils";
 import {
-  Tooltip,
   ResponsiveContainer,
   Legend,
   RadialBarChart,
@@ -43,6 +41,7 @@ const RadialVariant = ({
             const dataPayload = v.payload;
             return dataPayload ? (
               <ul className=" flex flex-col space-y2 ">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {dataPayload.map((e: any, i) => (
                   <li
                     key={`items-${i}`}
@@ -54,7 +53,7 @@ const RadialVariant = ({
                     />
                     <p>{e?.payload.name}</p>
                     <p className=" font-bold">
-                      {formatedPercentage((e.payload.percentage ))}
+                      {formatedPercentage(e.payload.percentage)}
                     </p>
                   </li>
                 ))}

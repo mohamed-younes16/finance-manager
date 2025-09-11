@@ -2,18 +2,17 @@
 
 import { useGetsummary } from "@/hooks/summary-hooks";
 import Chart from "./Chart";
-import BarVariant from "./BarVariant";
 import SpendingPie from "./SpendingCategory";
-import { useGetPlan } from "@/hooks/purchase-hooks";
 import { useSearchParams } from "next/navigation";
+import { useGetPlan } from "@/hooks/polar-hooks";
 
 export const DataCharts = () => {
   const searchParams = useSearchParams();
   const from = searchParams.get("from") || "";
   const to = searchParams.get("to") || "";
   const accountId = searchParams.get("accountId") || "";
-  const { data, isLoading } = useGetsummary({ from, to, accountId });
-  const { data: planData, isLoading: isLoadingPlan } = useGetPlan();
+  const { data } = useGetsummary({ from, to, accountId });
+  const { data: planData } = useGetPlan();
 
   return (
     <div className="  grid  gap-8 lg:grid-cols-6  grid-cols-1">

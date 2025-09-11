@@ -106,7 +106,9 @@ const TransactionForm = ({
         amount: toMilliunits(amount),
       };
 
-      id ? patchHandler({ id, ...data }) : addHandler(data);
+      if (id) {
+        patchHandler({ id, ...data });
+      } else addHandler(data);
       refresh();
     } catch (error) {
       console.log(error);
@@ -120,7 +122,7 @@ const TransactionForm = ({
     OnDone();
   };
   useEffect(() => {
-    isSuccess && OnDone();
+    if (isSuccess) OnDone();
   }, [isSuccess]);
 
   return (

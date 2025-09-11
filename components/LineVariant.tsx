@@ -27,7 +27,7 @@ const LineVariant = ({
           name="days"
           axisLine={false}
           tickLine={false}
-          tickFormatter={(v, i) => {
+          tickFormatter={(v) => {
             return format(v, "dd MMM");
           }}
           tickMargin={16}

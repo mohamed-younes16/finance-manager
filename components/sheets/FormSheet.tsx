@@ -2,17 +2,13 @@
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import React, { useEffect } from "react";
-import { Loader2, PlusCircle } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useStore } from "@/hooks/store";
 import { Button } from "../ui/button";
-import { useGetAccount } from "@/hooks/accounts-hooks";
-import { useGetCategory } from "@/hooks/categories-hooks";
 import DataForm from "../forms/DataForm";
 import TransactionForm from "../forms/TranscationForm";
-import { useGetTransaction } from "@/hooks/transcation-hooks";
 
-import { formatMilliunits } from "@/utils";
 import {
   ResponseAccountType,
   ResponseCategoryType,

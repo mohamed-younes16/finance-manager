@@ -18,7 +18,7 @@ const NavButton = ({
     <>
       {" "}
       <Link
-        href={path as any}
+        href={path }
         prefetch
         className={`flexcenter peer/link font-medium my-2  group px-4 max-lg:px-8 py-2 rounded-md relative  ${
           path == pathName && "text-minor  bg-accent"

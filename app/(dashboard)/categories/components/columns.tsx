@@ -54,18 +54,6 @@ export const columns: ColumnDef<CategoryResponseGetType>[] = [
     accessorKey: "createdAt",
     header: "Created at",
   },
-  // {
-  //   accessorKey: "logo",
-  //   header: "logo ",
-
-  //   cell: ({ row }) =><Image height={50} width={50} alt="" src={row.original.logo}/>
-  // },
-  // {
-  //   accessorKey: "billboardLabel",
-  //   header: "billBoard label",
-
-  //   cell: ({ row }) => row.original.billboardLabel,
-  // },
   {
     header: "Action",
     id: "action",

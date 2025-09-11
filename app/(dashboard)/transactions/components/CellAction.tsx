@@ -40,7 +40,6 @@ const CellAction = ({ data }: { data: ResponseTransactionsGetType }) => {
 
   const {
     id: accountId,
-    accountRef: { name },
     amount,
     notes,
     payee,

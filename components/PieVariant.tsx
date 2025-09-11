@@ -1,4 +1,4 @@
-import { formatedPercentage, formatedPrice } from "@/utils";
+import { formatedPercentage } from "@/utils";
 
 import {
   Tooltip,
@@ -18,10 +18,9 @@ const PieVariant = ({
   data: {
     category: string;
     value: number;
-    percentage:number
+    percentage: number;
   }[];
 }) => {
-
   return (
     <ResponsiveContainer width="100%" height={300}>
       <PieChart>
@@ -35,19 +34,19 @@ const PieVariant = ({
             const dataPayload = v.payload;
             return dataPayload ? (
               <ul className=" flex flex-col space-y2 ">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {dataPayload.map((e: any, i) => (
                   <li
                     key={`items-${i}`}
                     className="flex text-sm items-center gap-3"
                   >
-              
                     <span
                       style={{ backgroundColor: e.color }}
                       className="h-3 w-3 rounded-full"
                     />
-                    <p>{e?.payload.name}</p>
+                    <p>{e?.payload?.name}</p>
                     <p className=" font-bold">
-                      {formatedPercentage(e.payload.percentage )}
+                      {formatedPercentage(e.payload?.percentage)}
                     </p>
                   </li>
                 ))}

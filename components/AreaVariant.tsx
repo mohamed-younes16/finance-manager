@@ -1,12 +1,8 @@
 import { format } from "date-fns";
 import {
-  LineChart,
-  Line,
   XAxis,
-  YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
   AreaChart,
   Area,
@@ -41,7 +37,7 @@ const AreaVariant = ({
           name="days"
           axisLine={false}
           tickLine={false}
-          tickFormatter={(v, i) => {
+          tickFormatter={(v) => {
             return format(v, "dd MMM");
           }}
           tickMargin={16}
@@ -51,7 +47,6 @@ const AreaVariant = ({
 
         <Tooltip
           content={(v) => {
-        
             return <CustomTooltip payload={v.payload} active={v.active} />;
           }}
         />

@@ -11,7 +11,7 @@ import FormSheet from "@/components/sheets/FormSheet";
 import TableSkeleton from "@/components/TableSkeleton";
 import { useDeleteCategory, useGetCategories } from "@/hooks/categories-hooks";
 
-const page = () => {
+const Page = () => {
   const { data: categories, isLoading } = useGetCategories();
   const { mutate, isPending } = useDeleteCategory();
   const isDisabeled = isLoading || isPending;
@@ -57,4 +57,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -1,10 +1,7 @@
-import { formatedPercentage, formatedPrice } from "@/utils";
 import {
   Tooltip,
   ResponsiveContainer,
-  Legend,
   Radar,
-  Cell,
   RadarChart,
   PolarAngleAxis,
   PolarRadiusAxis,

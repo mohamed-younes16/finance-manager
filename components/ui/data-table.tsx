@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import * as React from "react";
 import {
@@ -99,11 +100,10 @@ export function DataTable<TData, TValue>({
               <Button
                 onClick={async () => {
                   const isConfirmed = await init();
-                  isConfirmed &&
-                    (() => {
-                      OnDelete(selectedRows);
-                      table.resetRowSelection();
-                    })();
+                  if (isConfirmed) {
+                    OnDelete(selectedRows);
+                    table.resetRowSelection();
+                  }
                 }}
                 disabled={disabled}
                 className=" flexcenter hover:text-red-500 gap-1"

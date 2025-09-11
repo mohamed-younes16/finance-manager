@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { InferResponseType } from "hono";
 import { client } from "./lib/hono";
 

@@ -5,14 +5,10 @@ import accounts from "./accounts";
 import categories from "./categories";
 import transactions from "./transactions";
 import summary from "./summary";
-import purchase from "./purchase";
-import webhook from "./webhook";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { polar } from "./polar";
-import chargily from "./chargily";
 import { checkAuth } from "./middleware";
 import configureOpenApi from "./lib/openApi";
-import { Scalar } from "@scalar/hono-api-reference";
 
 export const app = new OpenAPIHono({ strict: false }).basePath("/api");
 
@@ -30,16 +26,15 @@ app.onError((err, c) => {
   );
 });
 
-const routes = app
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _routes = app
   .route("/profile", profile)
   .route("/register", register)
   .route("/accounts", accounts)
   .route("/categories", categories)
   .route("/transactions", transactions)
   .route("/summary", summary)
-  .route("/purchase", purchase)
-  .route("/polar", polar)
-  .route("/webhook", webhook)
+  .route("/polar", polar);
 
 app.use("/*", async (c, next) => {
   if (
@@ -54,9 +49,9 @@ app.use("/*", async (c, next) => {
 });
 
 configureOpenApi(app);
-app.get("/scalar", Scalar({ url: "/api/doc", theme: "deepSpace" }));
+
 
 export const GET = handle(app);
 export const POST = handle(app);
 
-export type AppType = typeof routes;
+export type AppType = typeof _routes;

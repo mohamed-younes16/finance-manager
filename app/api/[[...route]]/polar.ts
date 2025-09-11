@@ -3,9 +3,8 @@ import { Checkout, CustomerPortal, Webhooks } from "@polar-sh/hono";
 import { zValidator } from "@hono/zod-validator";
 import * as z from "zod";
 import prismadb from "@/lib/prismabd";
-import { Polar } from "@polar-sh/sdk";
 import getCurrentUser from "@/actions";
-import { PolarSubscriptionActivePayload } from "@/index";
+import { getUserSubscriptionPlan } from "@/lib/subscription";
 
 export type CreateCheckoutResponse = {
   checkoutURL: string;
@@ -38,7 +37,7 @@ export const polar = new Hono()
     }
   )
   .post("/webhooks", async (c) => {
-    const res = await Webhooks({
+    await Webhooks({
       webhookSecret: process.env.POLAR_WEBHOOK_SECRET!,
       onSubscriptionActive: async (sub) => {
         const {
@@ -60,13 +59,13 @@ export const polar = new Hono()
         });
       },
     })(c);
-    return c.json({ pay: "pay____________________________________" });
+    return c.json({ pay: "payed with success " });
   })
   .get("/portal", async (c) => {
     const req = await CustomerPortal({
       accessToken: process.env.POLAR_ACCESS_TOKEN!,
       server: "sandbox",
-      getCustomerId: async (event) => {
+      getCustomerId: async () => {
         const user = await getCurrentUser();
 
         if (user && user.customerId) return user.customerId;
@@ -75,6 +74,10 @@ export const polar = new Hono()
     })(c);
     const url: string | null = req.headers.get("Location") || null;
     return c.json({ url });
+  })
+  .get("/", async (c) => {
+    const planData = await getUserSubscriptionPlan();
+    return c.json({ planData }, { status: 200 });
   });
 
 export default polar;

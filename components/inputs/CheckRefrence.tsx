@@ -6,12 +6,10 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowBigDownDash, ArrowBigUp } from "lucide-react";
+import { ArrowBigDownDash } from "lucide-react";
 import { useState } from "react";
 type category = { name: string; id: string; createdAt: string };
 type account = {
@@ -73,16 +71,18 @@ const CheckRefrence = ({
 
           {data.map((e, i) => (
             <DropdownMenuCheckboxItem
+              key={i}
               onCheckedChange={(c) => {
-                c ? setRefrence(e) : setRefrence(null);
-
-                c
-                  ? setChoosen(e.name || "")
-                  : setChoosen(
-                      (data &&
-                        data.filter((e) => e.id === Refrence)[0]?.name) ||
-                        ""
-                    );
+                if (c) {
+                  setChoosen(e.name || "");
+                  setRefrence(e);
+                } else {
+                  setChoosen(
+                    (data && data.filter((e) => e.id === Refrence)[0]?.name) ||
+                      ""
+                  );
+                  setRefrence(null);
+                }
               }}
               checked={e.id == Refrence}
             >

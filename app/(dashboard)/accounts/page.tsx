@@ -10,7 +10,7 @@ import { format } from "date-fns";
 import { Users2Icon } from "lucide-react";
 import { AccountResponseGetType, columns } from "./components/columns";
 
-const page = () => {
+const Page = () => {
   const { data: accounts, isLoading } = useGetAccounts();
   const { mutate, isPending } = useDeleteAccount();
   const isDisabeled = isLoading || isPending;
@@ -23,7 +23,6 @@ const page = () => {
       name: e.name,
     }));
   }
-
 
   return (
     <div className="bg-background min-h-screen rounded-md py-4  w-full px-8 max-lg:px-4 ">
@@ -57,4 +56,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

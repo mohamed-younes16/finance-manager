@@ -41,9 +41,9 @@ const Filter = () => {
     accountId?: string;
     dateRange?: DateRange;
   }) => {
-    const current: any = qs.parse(searchParams.toString());
+    const current = qs.parse(searchParams.toString());
 
-    let query = { ...current };
+    const query = { ...current };
 
     if (params.accountId !== undefined) {
       query.accountId = params.accountId !== "all" ? params.accountId : null;
@@ -65,7 +65,7 @@ const Filter = () => {
       { skipNull: true, skipEmptyString: true }
     );
 
-    router.push(url as any, { scroll: false });
+    router.push(url, { scroll: false });
   };
   useEffect(() => {
     if (fromState && toState && !(from && to)) {

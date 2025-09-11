@@ -3,8 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import type { infer as zInfer } from "zod";
-
 import {
   Form,
   FormControl,
@@ -53,30 +51,40 @@ const DataForm = ({
       id?: string;
       type: "category";
     }) => {
+      
   const isAccount = type === "account";
-  const isCategory = type === "category";
-  console.log(defaultValues);
+
+  const addAccount = useAddAccount();
+  const addCategory = useAddCategory();
+  const patchAccount = usePatchAccount();
+  const patchCategory = usePatchCategory();
+  const deleteAccount = useDeleteAccount();
+  const deleteCategory = useDeleteCategory();
+
+
   const {
     isPending: p1,
     mutate: addHandler,
     isSuccess: s1,
-  } = isAccount ? useAddAccount() : useAddCategory();
+  } = isAccount ? addAccount : addCategory;
+
   const {
     isPending: p2,
     mutate: patchHandler,
     isSuccess: s2,
-  } = isAccount ? usePatchAccount() : usePatchCategory();
+  } = isAccount ? patchAccount : patchCategory;
+
   const {
     isPending: p3,
     mutate: deleteHandler,
     isSuccess: s3,
-  } = isAccount ? useDeleteAccount() : useDeleteCategory();
+  } = isAccount ? deleteAccount : deleteCategory;
 
   const isPending = p1 || p2 || p3;
   const isSuccess = s1 || s2 || s3;
 
   useEffect(() => {
-    isSuccess && OnDone();
+    if (isSuccess) OnDone();
   }, [isSuccess]);
   type FormData = AccountSchemaType | CategorySchemaType;
   const formSchema = isAccount ? AccountSchema : CategorySchema;
@@ -90,7 +98,9 @@ const DataForm = ({
 
   async function onSubmit(values: FormData) {
     try {
-      id ? patchHandler({ id, name: values.name }) : addHandler(values);
+      if (id) {
+        patchHandler({ id, name: values.name });
+      } else addHandler(values);
 
       reset();
     } catch (error) {

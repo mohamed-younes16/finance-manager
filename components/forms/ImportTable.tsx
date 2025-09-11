@@ -3,7 +3,6 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -24,14 +23,16 @@ const ImportTable = ({
   selectedColumns,
 }: props) => {
   return (
-    <div className=" h-screen overflow-auto" >
+    <div className=" h-screen overflow-auto">
       {" "}
       <Table>
-        <TableCaption className=" mb-6">A list of your recent invoices.</TableCaption>
+        <TableCaption className=" mb-6">
+          A list of your recent invoices.
+        </TableCaption>
         <TableHeader>
           <TableRow>
             {headers?.map((e, i) => (
-              <TableHead>
+              <TableHead key={i}>
                 <HeaderSelect
                   onChange={onTableHeadSelectChange}
                   columnIndex={i}
@@ -45,7 +46,9 @@ const ImportTable = ({
           {body?.map((array: string[], i) => (
             <TableRow key={i}>
               {array.map((el) => (
-                <TableCell className=" max-lg:text-xs"  key={el}>{el}</TableCell>
+                <TableCell className=" max-lg:text-xs" key={el}>
+                  {el}
+                </TableCell>
               ))}
             </TableRow>
           ))}

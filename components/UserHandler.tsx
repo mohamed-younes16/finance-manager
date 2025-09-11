@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useSearchParams } from "next/navigation";
 import {
   Popover,
@@ -17,23 +17,16 @@ import { ModeToggle } from "./ui/themeButton";
 import ImageContainer from "./ImageContainer";
 import { UserFetched } from "@/models/Schemas/Setup";
 
-
 const UserHandler = ({ userData }: { userData: UserFetched | null }) => {
   const searchParams = useSearchParams();
   const [popopen, setpopopen] = useState(false);
   useEffect(() => {
     const redirected = searchParams.get("redirected") === "true";
     setpopopen(redirected && userData === null);
-  }, [searchParams]);
+  }, [searchParams, userData]);
 
   return (
-    <Popover
-      open={popopen}
-      onOpenChange={(e) => {
-        e && setpopopen(true);
-        !e && setpopopen(false);
-      }}
-    >
+    <Popover open={popopen} onOpenChange={setpopopen}>
       <PopoverTrigger asChild>
         <div
           className="flexcenter group/profile relative p-2 transition-all 

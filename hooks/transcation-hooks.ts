@@ -113,6 +113,7 @@ export const useAddTransaction = () => {
       return await res.json();
     },
     onSuccess: (result) => {
+      toast.dismiss();
       toast.success(result.message);
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["summary"] });

@@ -2,15 +2,14 @@
 import Heading from "@/components/Heading";
 import SubscribeModal from "@/components/SubscribeModal";
 import { Separator } from "@/components/ui/separator";
-import { usePolarPortal } from "@/hooks/polar-hooks";
-import { useGetPlan } from "@/hooks/purchase-hooks";
+import { useGetPlan, usePolarPortal } from "@/hooks/polar-hooks";
 import CliComp from "@/providers/modalProvider";
 import { CheckCircle, Loader2, Settings } from "lucide-react";
 
-const page = () => {
+const Page = () => {
   const { data: plan } = useGetPlan();
   const { data: portal } = usePolarPortal();
-  
+
   return (
     <div className="bg-background min-h-[40dvh]  space-y-4 rounded-md py-4  w-full px-8 max-lg:px-4 ">
       <div className="flex items-center justify-between">
@@ -82,4 +81,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

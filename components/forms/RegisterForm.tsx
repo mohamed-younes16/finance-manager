@@ -72,9 +72,7 @@ const RegisterForm = ({ type }: { type: "login" | "register" }) => {
     const percentage = (validCount / filedsNumber) * 100;
     setCleared(percentage);
   }, [form.formState]);
-  async function onSubmit(
-    values: RegisterSchemaType | LoginschemaType
-  ) {
+  async function onSubmit(values: RegisterSchemaType | LoginschemaType) {
     try {
       const data = {
         ...values,
@@ -89,7 +87,7 @@ const RegisterForm = ({ type }: { type: "login" | "register" }) => {
               window.location.reload();
             }, 500);
           })
-          .catch((e) => {
+          .catch(() => {
             toast.error("Error Happend");
           });
       } else if (type === "login") {

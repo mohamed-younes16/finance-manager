@@ -7,7 +7,7 @@ import TableSkeleton from "@/components/TableSkeleton";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { Separator } from "@/components/ui/separator";
-import { useGetPlan } from "@/hooks/purchase-hooks";
+
 import {
   useDeleteTransaction,
   useGetTransactions,
@@ -17,9 +17,10 @@ import { formatMilliunits } from "@/utils";
 import { Users2Icon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
-import { TransactionResponseGetType, columns } from "./components/columns";
+import {  columns } from "./components/columns";
 import { InferResponseType } from "hono";
 import { client } from "@/lib/hono";
+import { useGetPlan } from "@/hooks/polar-hooks";
 
 enum VARIANTS {
   LIST = "LIST",

@@ -8,10 +8,10 @@ const nextConfig = {
       { hostname: "s3.amazonaws.com" },
     ],
   },
-  typescript: { ignoreBuildErrors: true },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // typescript: { ignoreBuildErrors: true },
+  // eslint: {
+  //   ignoreDuringBuilds: true,
+  // },
 
   experimental: {
     optimizePackageImports: ["@radix-ui/react-icons", "lucide-react"],

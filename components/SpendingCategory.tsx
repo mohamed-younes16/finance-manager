@@ -1,7 +1,5 @@
 import { FileSearch2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import AreaVariant from "./AreaVariant";
-import BarVariant from "./BarVariant";
 
 import { useState } from "react";
 

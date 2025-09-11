@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { client } from "@/lib/hono";
 import { InferResponseType } from "hono";
 
+
 export type AccountResponseGetType = InferResponseType<
   typeof client.api.accounts.$get,
   200
@@ -54,18 +55,6 @@ export const columns: ColumnDef<AccountResponseGetType>[] = [
     accessorKey: "createdAt",
     header: "Created at",
   },
-  // {
-  //   accessorKey: "logo",
-  //   header: "logo ",
-
-  //   cell: ({ row }) =><Image height={50} width={50} alt="" src={row.original.logo}/>
-  // },
-  // {
-  //   accessorKey: "billboardLabel",
-  //   header: "billBoard label",
-
-  //   cell: ({ row }) => row.original.billboardLabel,
-  // },
   {
     header: "Action",
     id: "action",

@@ -5,7 +5,6 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -61,7 +60,7 @@ const SubscribeModal = () => {
               Upgrade to a Pro Plan
             </DialogTitle>
             <DialogDescription>
-              you'll be redirected into payment page and then back to the app
+              you&apos;ll be redirected into payment page and then back to the app
             </DialogDescription>
           </DialogHeader>
           <Separator />

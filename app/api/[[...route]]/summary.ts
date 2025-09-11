@@ -4,7 +4,7 @@ import prismadb from "@/lib/prismabd";
 import getCurrentUser from "@/actions";
 import * as z from "zod";
 import { differenceInDays, parse, subDays } from "date-fns";
-import { calculatePercentage, formatMilliunits, formatedPrice } from "@/utils";
+import { calculatePercentage, formatMilliunits } from "@/utils";
 
 const summary = new Hono().get(
   "/",
@@ -140,13 +140,13 @@ const summary = new Hono().get(
       const spentedOnCategories = await fetchCategorySpending(start, end);
       const topCategories = spentedOnCategories.slice(0, 3);
       const otherCategories = spentedOnCategories.slice(3);
-      let finalCategories = topCategories;
-      otherCategories.length > 0 &&
+      const finalCategories = topCategories;
+      if (otherCategories.length > 0) {
         finalCategories.push({
           category: "other",
           value: otherCategories.reduce((prev, cur) => prev + cur.value, 0),
         });
-
+      }
       const fetchDailyIncomeAndExpense = async (start: Date, end: Date) => {
         const incomeByDay = await prismadb.transaction.groupBy({
           by: ["createdAt"],

@@ -1,9 +1,8 @@
 "use client";
 
-import { useAddAccount } from "@/hooks/accounts-hooks";
 import { useStore } from "@/hooks/store";
 import { motion as m } from "framer-motion";
-import { Loader2 } from "lucide-react";
+
 import { Skeleton } from "./ui/skeleton";
 const Welcome = () => {
   const { user } = useStore();

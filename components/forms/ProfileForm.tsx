@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { Input, InputProps } from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { UploadDropzone } from "@/utils/uploadthing";
@@ -148,7 +148,7 @@ const ProfileForm = ({ userData }: { userData: UserFetched | null }) => {
                   <Input
                     className="account-form_input "
                     type="text"
-                    {...(field as InputProps)}
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />

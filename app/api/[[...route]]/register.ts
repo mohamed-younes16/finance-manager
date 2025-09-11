@@ -1,10 +1,7 @@
-import { Hono } from "hono";
 import { z } from "zod";
-
 import prismadb from "@/lib/prismabd";
 import bcrypt from "bcryptjs";
 import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
-import { RegisterSchema } from "@/models/Schemas/Setup";
 
 const schema = z.object({
   name: z.string(),

@@ -1,13 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import ImportTable from "./ImportTable";
 import { useAddTransaction } from "@/hooks/transcation-hooks";
 import CheckRefrence from "../inputs/CheckRefrence";
@@ -18,13 +12,6 @@ import { toast } from "sonner";
 import { toMilliunits } from "@/utils";
 import { Separator } from "../ui/separator";
 
-interface Transaction {
-  payee: string | undefined;
-  amount: number | undefined;
-  createdAt: string | undefined;
-  category?: string | undefined;
-  accountId: string;
-}
 type RequestTransactionPostType = InferRequestType<
   typeof client.api.transactions.$post
 >["json"];
@@ -71,7 +58,7 @@ const ImportCard = ({ data, onSubmit }: props) => {
       })
     ).length;
 
-    const orderedTransactions: RequestTransactionPostType = [];
+    const orderedTransactions: RequestTransactionPostType[] = [];
     let i = 0;
     while (i < minimumEligible) {
       orderedTransactions.push({
@@ -81,21 +68,26 @@ const ImportCard = ({ data, onSubmit }: props) => {
         payee: data.payee[i],
         createdAt: data.createdAt[i],
         accountId,
+        notes: "",
       });
       i++;
     }
-    accountId && addHandler(orderedTransactions);
+    if (accountId) {
+      orderedTransactions.forEach((tx) => {
+        addHandler(tx);
+      });
+    }
   };
 
   useEffect(() => {
-    isSuccess && onSubmit();
+    if (isSuccess) onSubmit();
   }, [isSuccess]);
 
   const getData = () => {
     if (!accountId) toast.error("no account choosen");
     const objectsData: SubUnorderedData | FullUnorderedData = {};
     Object.keys(selectedColumns).map((key) => {
-      let elementsOfKeys: string[] = [];
+      const elementsOfKeys: string[] = [];
       body.forEach((elememnt) => elementsOfKeys.push(elememnt[key]));
       objectsData[selectedColumns[key]] = elementsOfKeys;
     });
@@ -125,7 +117,7 @@ const ImportCard = ({ data, onSubmit }: props) => {
           <div className=" space-y-3">
             <Button
               onClick={() => {
-                !notReady ? getData() : null;
+                if (!notReady) getData();
               }}
               size="sm"
               disabled={selectedNumber < requiredOpts.length || isPending}
@@ -155,7 +147,7 @@ const ImportCard = ({ data, onSubmit }: props) => {
           <CheckRefrence
             type="account"
             data={accounts}
-            setRefrence={(v) => setAccountId(v)}
+            setRefrence={(v) => setAccountId(v?.id || "")}
             Refrence={accountId}
           />
         )}
