@@ -61,12 +61,17 @@ export const authOpts: AuthOptions = {
   },
   cookies: {
     sessionToken: {
-      name: "next-auth.session-token", // default dev name
+      name:
+        process.env.NODE_ENV === "production"
+          ? `__Secure-next-auth.session-token`
+          : "next-auth.session-token",
       options: {
         httpOnly: true,
         sameSite: "lax",
         path: "/",
-        secure: false, 
+        secure: process.env.NODE_ENV === "production",
+        domain:
+          process.env.NODE_ENV === "production" ? ".vercel.app" : undefined,
       },
     },
   },
